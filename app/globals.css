@@ -469,7 +469,7 @@ svg {
 
 .about-card {
   display: grid;
-  grid-template-columns: minmax(220px, 250px) minmax(0, 1fr);
+  grid-template-columns: minmax(250px, 290px) minmax(0, 1fr);
   gap: 1.8rem;
   align-items: start;
   height: fit-content;
@@ -477,8 +477,8 @@ svg {
 
 .profile-frame {
   position: relative;
-  width: min(100%, 240px);
-  min-height: 320px;
+  width: min(100%, 280px);
+  height: 360px;
   margin: 0 auto;
   overflow: hidden;
   border-radius: var(--radius-lg);
@@ -501,11 +501,11 @@ svg {
 }
 
 .profile-image {
-  width: 100%;
-  height: 100%;
   object-fit: cover;
-  object-position: center center;
-  filter: saturate(1.02) contrast(1.02);
+  object-position: center 22%;
+  transform: scale(1.08);
+  transform-origin: center top;
+  filter: saturate(1.06) contrast(1.06) brightness(1.02);
 }
 
 .about-copy p,
@@ -705,15 +705,22 @@ svg {
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 1.15rem;
+  gap: 1.25rem;
+  align-items: start;
 }
 
 .project-card {
   position: relative;
-  grid-column: span 4;
-  min-height: 340px;
+  grid-column: span 6;
+  min-height: 390px;
   overflow: hidden;
   transform-style: preserve-3d;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 28%),
+    var(--surface);
   transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
 }
 
@@ -721,10 +728,21 @@ svg {
   content: "";
   position: absolute;
   inset: auto -20% -35% auto;
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(0, 212, 170, 0.12), transparent 68%);
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 212, 170, 0.12), transparent 68%);
+    pointer-events: none;
+}
+
+.project-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(0, 212, 170, 0.08), transparent 34%),
+    linear-gradient(225deg, rgba(245, 166, 35, 0.06), transparent 30%);
+  opacity: 0.9;
   pointer-events: none;
 }
 
@@ -734,11 +752,24 @@ svg {
 }
 
 .project-wide {
-  grid-column: span 8;
+  grid-column: 1 / -1;
+  min-height: 320px;
 }
 
-.project-tall {
-  min-height: 100%;
+.projects-grid .project-card:nth-child(3) {
+  grid-column: span 7;
+}
+
+.projects-grid .project-card:nth-child(4) {
+  grid-column: span 5;
+}
+
+.projects-grid .project-card:nth-child(5) {
+  grid-column: span 5;
+}
+
+.projects-grid .project-card:nth-child(6) {
+  grid-column: span 7;
 }
 
 .project-header,
@@ -756,10 +787,14 @@ svg {
 .project-header {
   justify-content: space-between;
   align-items: flex-start;
+  gap: 0.9rem;
+  position: relative;
+  z-index: 1;
 }
 
 .project-meta {
   gap: 0.55rem;
+  align-items: center;
 }
 
 .project-links a {
@@ -768,6 +803,8 @@ svg {
   gap: 0.35rem;
   color: var(--muted);
   font-size: 0.92rem;
+  position: relative;
+  z-index: 1;
 }
 
 .project-status {
@@ -775,14 +812,43 @@ svg {
   align-items: center;
   padding: 0.35rem 0.65rem;
   border-radius: 999px;
-  background: rgba(0, 212, 170, 0.1);
-  border: 1px solid rgba(0, 212, 170, 0.18);
-  color: var(--teal);
   font-size: 0.76rem;
   font-style: normal;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.project-status-featured {
+  background: rgba(0, 212, 170, 0.1);
+  border: 1px solid rgba(0, 212, 170, 0.2);
+  color: var(--teal);
+}
+
+.project-status-live {
+  background: rgba(64, 156, 255, 0.12);
+  border: 1px solid rgba(64, 156, 255, 0.24);
+  color: #8fc2ff;
+}
+
+.project-status-ongoing {
+  background: rgba(245, 166, 35, 0.12);
+  border: 1px solid rgba(245, 166, 35, 0.24);
+  color: #ffd089;
+}
+
+.project-status-upcoming {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--muted-strong);
+}
+
+.project-card h3,
+.project-card p,
+.project-card ul,
+.tag-row {
+  position: relative;
+  z-index: 1;
 }
 
 .project-links a:hover {
@@ -993,6 +1059,7 @@ svg {
   .project-card,
   .project-wide {
     grid-column: auto;
+    min-height: auto;
   }
 }
 

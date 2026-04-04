@@ -25,8 +25,8 @@ type ProjectItem = {
   stack: string[];
   description: string;
   impact: string[];
-  github?: string;
-  live?: string;
+  github?: string | null;
+  live?: string | null;
   size?: "wide" | "tall";
 };
 
@@ -76,7 +76,7 @@ const educationItems = [
     institution: "Dr. A.P.J. Abdul Kalam Technical University",
     location: "Ghaziabad, Uttar Pradesh",
     program: "Bachelor in Computer Science and Engineering",
-    score: "8.6 / 10",
+    score: "8.7 / 10",
     duration: "2022 - Present",
   },
   {
@@ -141,6 +141,7 @@ const skillGroups: SkillGroup[] = [
       { name: "NumPy", level: 76 },
       { name: "Pandas", level: 80 },
       { name: "Matplotlib", level: 72 },
+      { name: "Seaborn", level: 70 },
     ],
   },
   {
@@ -216,6 +217,45 @@ const projects: ProjectItem[] = [
     size: "wide",
   },
   {
+    title: "AI Mock Interview Platform",
+    date: "Live Project",
+    status: "GenAI Build",
+    stack: ["Next.js", "TypeScript", "LLM APIs", "Voice Interaction"],
+    description:
+      "A GenAI-powered mock interview platform designed for contextual follow-up questioning, adaptive difficulty, and realistic interview practice.",
+    impact: [
+      "Built a mock interview workflow with Next.js, TypeScript, and LLM APIs, achieving 90%+ contextual relevance in follow-up questions and reducing response latency by 40%.",
+      "Implemented adaptive difficulty, voice interaction, and AI-generated scorecards, increasing user engagement by 60% and improving interview simulation accuracy by 35%.",
+    ],
+    github: "https://github.com/shifa-s11/[PLACEHOLDER]",
+    live: "[PLACEHOLDER]",
+    size: "wide",
+  },
+  {
+    title: "BuzzBook",
+    date: "Live Project",
+    status: "Team Project · Ongoing",
+    stack: [
+      "Next.js 15",
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS 4",
+      "Socket.IO",
+      "Razorpay",
+      "shadcn/ui",
+      "Google Maps API",
+    ],
+    description:
+      "A full-stack movie ticket booking platform with a customer-facing app and admin dashboard for discovery, seat selection, snack add-ons, and secure checkout.",
+    impact: [
+      "Built authentication, movie and theatre discovery, seat selection, wishlist support, snack add-ons, and Razorpay-based checkout across the customer and admin flows.",
+      "Developed real-time booking and management workflows with Socket.IO, including live seat holds, temporary booking sync, theatre and movie administration, and dashboard stats for bookings, users, movies, and revenue.",
+    ],
+    github: "https://github.com/Anshika2608/buzzbook_project",
+    live: "https://buzzbook-project.vercel.app",
+    size: "wide",
+  },
+  {
     title: "Droom",
     date: "Jul 2025",
     status: "Featured",
@@ -228,45 +268,37 @@ const projects: ProjectItem[] = [
     ],
     github: "https://github.com/shifa-s11/droom",
     live: "https://droom-pi.vercel.app",
-    size: "tall",
+    size: "wide",
   },
   {
     title: "Vigilance+",
     date: "Jan 2024 - Present",
-    status: "Live Project",
+    status: "Team Project · Ongoing",
     stack: ["React.js", "Tailwind CSS", "JavaScript", "Next UI", "WebSocket"],
     description:
-      "A real-time visitor management system focused on lower entry friction, better accuracy, and automated reporting.",
+      "An ongoing team project for real-time visitor management, focused on lower entry friction, better accuracy, and automated reporting.",
     impact: [
       "Reduced entry errors by 78% across 100+ daily records using WebSocket-based workflows.",
       "Improved report accuracy by 95% and saved 10 administrative hours per week.",
     ],
+    github: null,
+    live: null,
+    size: "wide",
   },
   {
-    title: "Current Build",
-    date: "Currently Working On",
-    status: "In Progress",
-    stack: ["Next.js", "[PLACEHOLDER]", "[PLACEHOLDER]"],
-    description:
-      "A space for the product Shifa is actively building right now, with room to add the problem statement, stack, and progress highlights.",
-    impact: [
-      "Use this card to document what is being built, what stage it is in, and what makes it exciting.",
-    ],
-    github: "[PLACEHOLDER]",
-    live: "[PLACEHOLDER]",
-  },
-  {
-    title: "Upcoming Launch",
+    title: "OpsLens AI",
     date: "Upcoming",
-    status: "Planned",
-    stack: ["[PLACEHOLDER]", "[PLACEHOLDER]", "[PLACEHOLDER]"],
+    status: "Python + GenAI Idea",
+    stack: ["Python", "FastAPI", "Next.js", "LLM APIs", "Vector Search"],
     description:
-      "Reserved for the next portfolio-ready release, with placeholders for launch narrative, visuals, and measurable outcomes.",
+      "A real-world operations assistant for small teams that ingests SOPs, invoices, support chats, and internal documents to answer questions, flag issues, and generate action-ready summaries.",
     impact: [
-      "Add the product name, planned stack, expected users, and the links once the build is ready to share.",
+      "Would use Python-based ingestion and retrieval pipelines to turn scattered business documents into a searchable GenAI workspace.",
+      "Could save teams hours each week by automating summaries, follow-up tasks, and operational question answering in one place.",
     ],
-    github: "[PLACEHOLDER]",
-    live: "[PLACEHOLDER]",
+    github: null,
+    live: null,
+    size: "wide",
   },
 ];
 
@@ -284,8 +316,9 @@ const heroStats = [
 
 const socialLinks = {
   email: "mailto:1107shifa@gmail.com",
-  linkedin: "[PLACEHOLDER]",
-  github: "[PLACEHOLDER]",
+  linkedin: "https://www.linkedin.com/in/shifa-saeed-2b5965268",
+  github: "https://github.com/shifa-s11",
+  leetcode: "https://leetcode.com/u/shifa_s1107/",
 };
 
 function IconArrow() {
@@ -342,14 +375,50 @@ function IconSpark() {
   );
 }
 
-function resolveLink(href: string) {
-  return href === "[PLACEHOLDER]" ? "#contact" : href;
+function IconLeetCode() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M15.5 5 9 11.5l6.5 6.5" />
+      <path d="M18.5 12H10" />
+      <path d="m10.5 4.5-5 5a3.5 3.5 0 0 0 0 5l5 5" />
+    </svg>
+  );
 }
 
-function linkProps(href: string) {
-  return href === "[PLACEHOLDER]"
+function resolveLink(href?: string | null) {
+  if (!href || href === "[PLACEHOLDER]") {
+    return "#contact";
+  }
+
+  return href;
+}
+
+function linkProps(href?: string | null) {
+  return !href || href === "[PLACEHOLDER]"
     ? { "aria-label": "Placeholder link", title: "Add link later" }
     : { target: "_blank", rel: "noreferrer" };
+}
+
+function getProjectStatusTone(status?: string) {
+  if (!status) {
+    return "live";
+  }
+
+  const normalized = status.toLowerCase();
+
+  if (normalized.includes("upcoming")) {
+    return "upcoming";
+  }
+
+  if (normalized.includes("ongoing")) {
+    return "ongoing";
+  }
+
+  if (normalized.includes("featured")) {
+    return "featured";
+  }
+
+  return "live";
 }
 
 export default function Home() {
@@ -357,6 +426,17 @@ export default function Home() {
   const [typedText, setTypedText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const heroRef = useRef<HTMLCanvasElement | null>(null);
+  const projectOrder = [
+    "EduVerse",
+    "AI Mock Interview Platform",
+    "BuzzBook",
+    "Vigilance+",
+    "Droom",
+    "OpsLens AI",
+  ];
+  const orderedProjects = [...projects].sort(
+    (a, b) => projectOrder.indexOf(a.title) - projectOrder.indexOf(b.title),
+  );
 
   useEffect(() => {
     const currentRole = roles[roleIndex];
@@ -685,10 +765,10 @@ export default function Home() {
           <article className="about-card gradient-card reveal" data-reveal>
             <div className="profile-frame">
               <Image
-                src="/images/shifa-profile-garden.jpeg"
+                src="/images/shifa-profiles.jpeg"
                 alt="Portrait of Shifa Saeed"
-                width={700}
-                height={900}
+                fill
+                sizes="(max-width: 900px) 280px, 320px"
                 className="profile-image"
                 priority
               />
@@ -826,7 +906,7 @@ export default function Home() {
         </div>
 
         <div className="projects-grid">
-          {projects.map((project) => (
+          {orderedProjects.map((project) => (
             <article
               key={project.title}
               className={[
@@ -843,15 +923,27 @@ export default function Home() {
               <div className="project-header">
                 <div className="project-meta">
                   <span>{project.date}</span>
-                  {project.status ? <em className="project-status">{project.status}</em> : null}
+                  {project.status ? (
+                    <em
+                      className={`project-status project-status-${getProjectStatusTone(
+                        project.status,
+                      )}`}
+                    >
+                      {project.status.replace("Â·", "-")}
+                    </em>
+                  ) : null}
                 </div>
                 <div className="project-links">
-                  <a href={resolveLink(project.github)} {...linkProps(project.github)}>
-                    GitHub <IconArrow />
-                  </a>
-                  <a href={resolveLink(project.live)} {...linkProps(project.live)}>
-                    Live <IconArrow />
-                  </a>
+                  {project.github ? (
+                    <a href={resolveLink(project.github)} {...linkProps(project.github)}>
+                      GitHub <IconArrow />
+                    </a>
+                  ) : null}
+                  {project.live ? (
+                    <a href={resolveLink(project.live)} {...linkProps(project.live)}>
+                      Live <IconArrow />
+                    </a>
+                  ) : null}
                 </div>
               </div>
 
@@ -944,6 +1036,13 @@ export default function Home() {
                 aria-label="GitHub profile"
               >
                 <IconGitHub />
+              </a>
+              <a
+                href={resolveLink(socialLinks.leetcode)}
+                {...linkProps(socialLinks.leetcode)}
+                aria-label="LeetCode profile"
+              >
+                <IconLeetCode />
               </a>
             </div>
 
