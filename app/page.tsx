@@ -25,8 +25,8 @@ type ProjectItem = {
   stack: string[];
   description: string;
   impact: string[];
-  github: string;
-  live: string;
+  github?: string;
+  live?: string;
   size?: "wide" | "tall";
 };
 
@@ -104,8 +104,8 @@ const skillGroups: SkillGroup[] = [
       { name: "JavaScript", level: 92 },
       { name: "TypeScript", level: 88 },
       { name: "HTML", level: 94 },
-      { name: "Python", level: 74 },
-      { name: "C / C++", level: 71 },
+      { name: "Python", level: 80 },
+      { name: "C / C++", level: 85},
     ],
   },
   {
@@ -211,8 +211,8 @@ const projects: ProjectItem[] = [
       "Built a role-based dashboard for course, user, and order management.",
       "Implemented JWT plus Redis-backed auth and Razorpay payments for secure, scalable access.",
     ],
-    github: "[PLACEHOLDER]",
-    live: "[PLACEHOLDER]",
+    github: "https://github.com/shifa-s11/lms-client",
+    live: "https://lms-client-three-omega.vercel.app",
     size: "wide",
   },
   {
@@ -226,8 +226,8 @@ const projects: ProjectItem[] = [
       "Improved UI responsiveness by 30% through optimized pagination, recordings, and custom hook-based state handling.",
       "Reduced setup latency by 40% while supporting hundreds of participants.",
     ],
-    github: "[PLACEHOLDER]",
-    live: "[PLACEHOLDER]",
+    github: "https://github.com/shifa-s11/droom",
+    live: "https://droom-pi.vercel.app",
     size: "tall",
   },
   {
@@ -241,8 +241,6 @@ const projects: ProjectItem[] = [
       "Reduced entry errors by 78% across 100+ daily records using WebSocket-based workflows.",
       "Improved report accuracy by 95% and saved 10 administrative hours per week.",
     ],
-    github: "[PLACEHOLDER]",
-    live: "[PLACEHOLDER]",
   },
   {
     title: "Current Build",
