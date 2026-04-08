@@ -984,27 +984,7 @@ export default function Home() {
                         </span>
                       </div>
 
-                      <div className="mt-3 flex items-center gap-2">
-                        {Array.from({ length: 5 }).map((_, levelIndex) => {
-                          const active = skill.level >= (levelIndex + 1) * 20;
-
-                          return (
-                            <span
-                              key={`${skill.name}-${levelIndex}`}
-                              className={[
-                                "h-2.5 flex-1 rounded-full transition-colors duration-300",
-                                active
-                                  ? group.accent === "teal"
-                                    ? "bg-[linear-gradient(90deg,rgba(0,212,170,0.52),var(--teal))]"
-                                    : "bg-[linear-gradient(90deg,rgba(245,166,35,0.42),var(--amber))]"
-                                  : "bg-white/[0.07]",
-                              ].join(" ")}
-                            />
-                          );
-                        })}
-                      </div>
-
-                      <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/[0.05]">
+                      <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-white/[0.07]">
                         <div
                           className={[
                             "h-full rounded-full transition-[width] duration-[1150ms] [transition-timing-function:cubic-bezier(0.2,0.8,0.2,1)]",
