@@ -421,10 +421,29 @@ function getProjectStatusTone(status?: string) {
   return "live";
 }
 
+function getProjectStatusClass(status?: string) {
+  const tone = getProjectStatusTone(status);
+
+  if (tone === "featured") {
+    return "bg-[rgba(0,212,170,0.1)] border border-[rgba(0,212,170,0.2)] text-[var(--teal)]";
+  }
+
+  if (tone === "ongoing") {
+    return "bg-[rgba(245,166,35,0.12)] border border-[rgba(245,166,35,0.24)] text-[#ffd089]";
+  }
+
+  if (tone === "upcoming") {
+    return "bg-white/[0.07] border border-white/[0.14] text-[var(--muted-strong)]";
+  }
+
+  return "bg-[rgba(64,156,255,0.12)] border border-[rgba(64,156,255,0.24)] text-[#8fc2ff]";
+}
+
 export default function Home() {
   const [roleIndex, setRoleIndex] = useState(0);
   const [typedText, setTypedText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isNavScrolled, setIsNavScrolled] = useState(false);
   const heroRef = useRef<HTMLCanvasElement | null>(null);
   const projectOrder = [
     "EduVerse",
@@ -641,13 +660,8 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const nav = document.querySelector<HTMLElement>("[data-navbar]");
-    if (!nav) {
-      return;
-    }
-
     const onScroll = () => {
-      nav.classList.toggle("is-scrolled", window.scrollY > 24);
+      setIsNavScrolled(window.scrollY > 24);
     };
 
     onScroll();
@@ -661,18 +675,42 @@ export default function Home() {
       <canvas ref={heroRef} className="hero-canvas" aria-hidden="true" />
       <div className="page-noise" aria-hidden="true" />
 
-      <header className="site-header" data-navbar>
-        <a className="brand-mark" href="#top" aria-label="Go to top">
-          <span>S</span>
+      <header
+        className={[
+          "sticky top-3 z-20 isolate mx-auto mt-[0.95rem] flex w-[min(1180px,calc(100%-2rem))] items-center justify-between gap-[1.4rem] rounded-full border border-white/8 px-[1.1rem] py-4 backdrop-blur-[18px] shadow-[0_16px_34px_rgba(0,0,0,0.18)] transition-[background-color,border-color,box-shadow] duration-220",
+          isNavScrolled
+            ? "bg-[rgba(7,11,21,0.82)] border-white/10 shadow-[0_18px_42px_rgba(0,0,0,0.26)]"
+            : "bg-[rgba(7,11,21,0.58)]",
+        ].join(" ")}
+      >
+        <a
+          className="flex shrink-0 items-center gap-[0.85rem] whitespace-nowrap"
+          href="#top"
+          aria-label="Go to top"
+        >
+          <span className="grid size-[2.6rem] place-items-center rounded-full bg-[linear-gradient(135deg,var(--teal),#90ffeb)] font-(family-name:--font-display) text-[1.1rem] font-extrabold text-[#071118]">
+            S
+          </span>
           <div>
-            <strong>Shifa Saeed</strong>
-            <p>Full-stack developer</p>
+            <strong className="block whitespace-nowrap text-[0.95rem]">
+              Shifa Saeed
+            </strong>
+            <p className="mt-[0.16rem] text-[0.82rem] text-(--muted)">
+              Full-stack developer
+            </p>
           </div>
         </a>
 
-        <nav className="site-nav" aria-label="Primary navigation">
+        <nav
+          className="hidden flex-wrap justify-end gap-[0.35rem] md:flex"
+          aria-label="Primary navigation"
+        >
           {navItems.map((item) => (
-            <a key={item.label} href={item.href}>
+            <a
+              key={item.label}
+              href={item.href}
+              className="rounded-full px-[0.82rem] py-[0.55rem] text-[0.93rem] text-(--muted) transition-[transform,background-color,border-color,box-shadow,color,opacity] duration-220 hover:bg-white/4.5 hover:text-(--text)"
+            >
               {item.label}
             </a>
           ))}
@@ -755,26 +793,34 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section" id="about">
-        <div className="section-heading reveal" data-reveal>
-          <span className="section-kicker">About</span>
-          <h2>A timeline-shaped profile with product instincts at the center.</h2>
+      <section className="relative z-1 mx-auto w-[min(1180px,calc(100%-2rem))] py-12 max-sm:w-[min(100%-1.15rem,1180px)]" id="about">
+        <div className="section-heading reveal mb-8 max-w-[48rem]" data-reveal>
+          <span className="section-kicker inline-flex items-center gap-[0.55rem] text-[0.8rem] uppercase tracking-[0.18em] text-[var(--teal)] before:h-px before:w-[2.6rem] before:bg-[linear-gradient(90deg,transparent,currentColor)] before:content-['']">
+            About
+          </span>
+          <h2 className="mt-[0.8rem] font-[family-name:var(--font-display)] text-[clamp(2rem,4.7vw,3.5rem)] leading-[1.14] tracking-[-0.05em] text-balance">
+            A timeline-shaped profile with product instincts at the center.
+          </h2>
         </div>
 
-        <div className="about-grid">
-          <article className="about-card gradient-card reveal" data-reveal>
-            <div className="profile-frame">
+        <div>
+          <article
+            className="reveal grid h-fit gap-[1.8rem] rounded-[var(--radius-xl)] border border-[var(--surface-border)] bg-[linear-gradient(180deg,rgba(0,212,170,0.08),transparent_34%),linear-gradient(120deg,rgba(255,255,255,0.035),rgba(255,255,255,0.02)),var(--surface-strong)] p-[1.55rem] shadow-[var(--shadow)] backdrop-blur-[16px] md:grid-cols-[minmax(250px,290px)_minmax(0,1fr)]"
+            data-reveal
+          >
+            <div className="relative mx-auto h-[360px] w-[min(100%,280px)] overflow-hidden rounded-[var(--radius-lg)] border border-white/8 bg-[radial-gradient(circle_at_top,rgba(0,212,170,0.1),transparent_44%),rgba(255,255,255,0.03)] shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_20px_50px_rgba(0,0,0,0.28)] after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-[34%] after:bg-[linear-gradient(180deg,transparent,rgba(10,15,30,0.18))] after:content-['']">
               <Image
                 src="/images/shifa-profiles.jpeg"
                 alt="Portrait of Shifa Saeed"
                 fill
                 sizes="(max-width: 900px) 280px, 320px"
-                className="profile-image"
+                quality={100}
+                className="object-cover [object-position:center_22%]"
                 priority
               />
             </div>
 
-            <div className="about-copy">
+            <div className="[&_p]:mb-4 [&_p]:text-[var(--muted)] [&_p]:leading-[1.8] [&_p]:text-pretty [&_p:last-child]:mb-0">
               <p>
                 Shifa works across frontend systems, APIs, and real-time
                 integrations, translating operational complexity into interfaces that
@@ -793,12 +839,22 @@ export default function Home() {
           </article>
         </div>
 
-        <div className="timeline-list timeline-list-grid">
+        <div className="mt-5 grid gap-4 md:grid-cols-2">
           {timelineMoments.map((item) => (
-            <article key={item.title} className="timeline-card reveal" data-reveal>
-              <span>{item.label}</span>
-              <h3>{item.title}</h3>
-              <p>{item.body}</p>
+            <article
+              key={item.title}
+              className="reveal rounded-[var(--radius-xl)] border border-[var(--surface-border)] bg-[var(--surface)] p-[1.55rem] shadow-[var(--shadow)] backdrop-blur-[16px]"
+              data-reveal
+            >
+              <span className="text-[0.86rem] uppercase tracking-[0.09em] text-[var(--amber)]">
+                {item.label}
+              </span>
+              <h3 className="mt-[0.55rem] mb-[0.55rem] font-[family-name:var(--font-display)] text-[1.45rem] leading-[1.16]">
+                {item.title}
+              </h3>
+              <p className="text-[var(--muted)] leading-[1.8] text-pretty">
+                {item.body}
+              </p>
             </article>
           ))}
         </div>
@@ -845,28 +901,50 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section" id="experience">
-        <div className="section-heading reveal" data-reveal>
-          <span className="section-kicker">Experience</span>
-          <h2>Measured contributions across product, performance, and platform work.</h2>
+      <section
+        className="relative z-[1] mx-auto w-[min(1180px,calc(100%-2rem))] py-12 max-sm:w-[min(100%-1.15rem,1180px)]"
+        id="experience"
+      >
+        <div className="section-heading reveal mb-8 max-w-[48rem]" data-reveal>
+          <span className="section-kicker inline-flex items-center gap-[0.55rem] text-[0.8rem] uppercase tracking-[0.18em] text-[var(--teal)] before:h-px before:w-[2.6rem] before:bg-[linear-gradient(90deg,transparent,currentColor)] before:content-['']">
+            Experience
+          </span>
+          <h2 className="mt-[0.8rem] font-[family-name:var(--font-display)] text-[clamp(2rem,4.7vw,3.5rem)] leading-[1.14] tracking-[-0.05em] text-balance">
+            Measured contributions across product, performance, and platform work.
+          </h2>
         </div>
 
-        <div className="experience-rail" data-line-grow>
+        <div
+          className="experience-rail relative grid gap-[1.2rem] pl-8 max-sm:pl-[1.35rem]"
+          data-line-grow
+        >
           {experiences.map((item) => (
             <article
               key={`${item.company}-${item.role}`}
-              className="experience-card reveal"
+              className="reveal relative rounded-[var(--radius-xl)] border border-[var(--surface-border)] bg-[var(--surface)] p-[1.55rem] shadow-[var(--shadow)] backdrop-blur-[16px]"
               data-reveal
             >
-              <div className="experience-dot" />
-              <div className="experience-content">
-                <span>{item.dates}</span>
-                <h3>{item.role}</h3>
-                <h4>{item.company}</h4>
-                {item.location ? <p className="experience-location">{item.location}</p> : null}
-                <ul>
+              <div className="absolute top-[1.7rem] -left-[1.95rem] h-4 w-4 rounded-full bg-[linear-gradient(135deg,var(--teal),var(--amber))] shadow-[0_0_0_5px_rgba(10,15,30,0.78)] max-sm:-left-[1.3rem]" />
+              <div>
+                <span className="text-[0.86rem] uppercase tracking-[0.09em] text-[var(--amber)]">
+                  {item.dates}
+                </span>
+                <h3 className="mt-[0.55rem] mb-[0.55rem] font-[family-name:var(--font-display)] text-[1.45rem] leading-[1.16]">
+                  {item.role}
+                </h3>
+                <h4 className="mb-[0.4rem] text-[1.08rem] leading-[1.8] text-[var(--muted)]">
+                  {item.company}
+                </h4>
+                {item.location ? (
+                  <p className="mb-[0.8rem] text-[0.95rem] text-[var(--muted-strong)]">
+                    {item.location}
+                  </p>
+                ) : null}
+                <ul className="m-0 pl-[1.1rem] text-[var(--muted)]">
                   {item.points.map((point) => (
-                    <li key={point}>{point}</li>
+                    <li key={point} className="leading-[1.8] text-pretty">
+                      {point}
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -875,90 +953,142 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section" id="position-of-responsibility">
-        <div className="section-heading reveal" data-reveal>
-          <span className="section-kicker">Position of Responsibility</span>
-          <h2>Leadership, coordination, and frontend ownership in community-driven work.</h2>
+      <section
+        className="relative z-[1] mx-auto w-[min(1180px,calc(100%-2rem))] py-12 max-sm:w-[min(100%-1.15rem,1180px)]"
+        id="position-of-responsibility"
+      >
+        <div className="section-heading reveal mb-8 max-w-[48rem]" data-reveal>
+          <span className="section-kicker inline-flex items-center gap-[0.55rem] text-[0.8rem] uppercase tracking-[0.18em] text-[var(--teal)] before:h-px before:w-[2.6rem] before:bg-[linear-gradient(90deg,transparent,currentColor)] before:content-['']">
+            Position of Responsibility
+          </span>
+          <h2 className="mt-[0.8rem] font-[family-name:var(--font-display)] text-[clamp(2rem,4.7vw,3.5rem)] leading-[1.14] tracking-[-0.05em] text-balance">
+            Leadership, coordination, and frontend ownership in community-driven work.
+          </h2>
         </div>
 
-        <article className="responsibility-card reveal" data-reveal>
-          <div className="responsibility-head">
+        <article
+          className="responsibility-card reveal rounded-[var(--radius-xl)] border border-[var(--surface-border)] p-[1.55rem] shadow-[var(--shadow)] backdrop-blur-[16px]"
+          data-reveal
+        >
+          <div>
             <div>
-              <span>{responsibility.dates}</span>
-              <h3>{responsibility.role}</h3>
-              <h4>{responsibility.organization}</h4>
-              <p className="experience-location">{responsibility.location}</p>
+              <span className="text-[0.86rem] uppercase tracking-[0.09em] text-[var(--amber)]">
+                {responsibility.dates}
+              </span>
+              <h3 className="mt-[0.55rem] mb-[0.35rem] font-[family-name:var(--font-display)] text-[1.7rem] leading-[1.14]">
+                {responsibility.role}
+              </h3>
+              <h4 className="text-[1.05rem] leading-[1.7] text-[var(--muted)]">
+                {responsibility.organization}
+              </h4>
+              <p className="mb-[0.8rem] text-[0.95rem] text-[var(--muted-strong)]">
+                {responsibility.location}
+              </p>
             </div>
           </div>
 
-          <ul>
+          <ul className="m-0 pl-[1.1rem] text-[var(--muted)]">
             {responsibility.points.map((point) => (
-              <li key={point}>{point}</li>
+              <li key={point} className="leading-[1.8] text-pretty">
+                {point}
+              </li>
             ))}
           </ul>
         </article>
       </section>
 
-      <section className="section" id="projects">
-        <div className="section-heading reveal" data-reveal>
-          <span className="section-kicker">Projects</span>
-          <h2>Selected builds presented in an editorial bento grid.</h2>
+      <section
+        className="relative z-[1] mx-auto w-[min(1180px,calc(100%-2rem))] py-12 max-sm:w-[min(100%-1.15rem,1180px)]"
+        id="projects"
+      >
+        <div className="section-heading reveal mb-8 max-w-[48rem]" data-reveal>
+          <span className="section-kicker inline-flex items-center gap-[0.55rem] text-[0.8rem] uppercase tracking-[0.18em] text-[var(--teal)] before:h-px before:w-[2.6rem] before:bg-[linear-gradient(90deg,transparent,currentColor)] before:content-['']">
+            Projects
+          </span>
+          <h2 className="mt-[0.8rem] font-[family-name:var(--font-display)] text-[clamp(2rem,4.7vw,3.5rem)] leading-[1.14] tracking-[-0.05em] text-balance">
+            Selected builds presented in an editorial bento grid.
+          </h2>
         </div>
 
-        <div className="projects-grid">
-          {orderedProjects.map((project) => (
+        <div className="grid grid-cols-1 gap-5 min-[1081px]:grid-cols-12">
+          {orderedProjects.map((project, index) => (
             <article
               key={project.title}
               className={[
-                "project-card",
-                project.size === "wide" ? "project-wide" : "",
-                project.size === "tall" ? "project-tall" : "",
                 "reveal",
+                "relative flex min-h-0 flex-col overflow-hidden rounded-[var(--radius-xl)] border border-[var(--surface-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.025),transparent_28%),var(--surface)] p-[1.55rem] shadow-[var(--shadow)] backdrop-blur-[16px] transition-[transform,border-color,box-shadow] duration-220 before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(135deg,rgba(0,212,170,0.08),transparent_34%),linear-gradient(225deg,rgba(245,166,35,0.06),transparent_30%)] before:opacity-90 before:content-[''] after:pointer-events-none after:absolute after:right-[-20%] after:bottom-[-35%] after:h-[180px] after:w-[180px] after:rounded-full after:bg-[radial-gradient(circle,rgba(0,212,170,0.12),transparent_68%)] after:content-[''] hover:border-white/[0.16] hover:shadow-[0_26px_80px_rgba(0,0,0,0.46)]",
+                project.size === "wide" ? "min-[1081px]:col-span-12 min-[1081px]:min-h-[320px]" : "min-[1081px]:col-span-6",
+                index === 2 ? "min-[1081px]:col-span-7" : "",
+                index === 3 ? "min-[1081px]:col-span-5" : "",
+                index === 4 ? "min-[1081px]:col-span-5" : "",
+                index === 5 ? "min-[1081px]:col-span-7" : "",
               ]
                 .filter(Boolean)
                 .join(" ")}
               data-reveal
               data-tilt-card
             >
-              <div className="project-header">
-                <div className="project-meta">
-                  <span>{project.date}</span>
+              <div className="relative z-[1] flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex flex-wrap items-center gap-[0.55rem]">
+                  <span className="text-[0.86rem] uppercase tracking-[0.09em] text-[var(--amber)]">
+                    {project.date}
+                  </span>
                   {project.status ? (
                     <em
-                      className={`project-status project-status-${getProjectStatusTone(
-                        project.status,
-                      )}`}
+                      className={[
+                        "inline-flex items-center rounded-full px-[0.65rem] py-[0.35rem] text-[0.76rem] not-italic font-bold uppercase tracking-[0.08em]",
+                        getProjectStatusClass(project.status),
+                      ].join(" ")}
                     >
                       {project.status.replace("Â·", "-")}
                     </em>
                   ) : null}
                 </div>
-                <div className="project-links">
+                <div className="relative z-[1] flex flex-wrap items-center gap-[0.8rem]">
                   {project.github ? (
-                    <a href={resolveLink(project.github)} {...linkProps(project.github)}>
+                    <a
+                      href={resolveLink(project.github)}
+                      {...linkProps(project.github)}
+                      className="inline-flex items-center gap-[0.35rem] text-[0.92rem] text-[var(--muted)] transition-colors duration-220 hover:text-[var(--text)]"
+                    >
                       GitHub <IconArrow />
                     </a>
                   ) : null}
                   {project.live ? (
-                    <a href={resolveLink(project.live)} {...linkProps(project.live)}>
+                    <a
+                      href={resolveLink(project.live)}
+                      {...linkProps(project.live)}
+                      className="inline-flex items-center gap-[0.35rem] text-[0.92rem] text-[var(--muted)] transition-colors duration-220 hover:text-[var(--text)]"
+                    >
                       Live <IconArrow />
                     </a>
                   ) : null}
                 </div>
               </div>
 
-              <h3>{project.title}</h3>
-              <p>{project.description}</p>
+              <h3 className="relative z-[1] mt-[0.55rem] font-[family-name:var(--font-display)] text-[clamp(1.4rem,3.6vw,1.8rem)] leading-[1.12] sm:text-[1.45rem]">
+                {project.title}
+              </h3>
+              <p className="relative z-[1] mt-3 text-[var(--muted)] leading-[1.8] text-pretty">
+                {project.description}
+              </p>
 
-              <div className="tag-row">
+              <div className="relative z-[1] mt-4 flex flex-wrap items-center gap-[0.8rem]">
                 {project.stack.map((tag) => (
-                  <span key={`${project.title}-${tag}`}>{tag}</span>
+                  <span
+                    key={`${project.title}-${tag}`}
+                    className="rounded-full bg-white/[0.05] px-[0.76rem] py-[0.42rem] text-[0.82rem] text-[#d8def0]"
+                  >
+                    {tag}
+                  </span>
                 ))}
               </div>
 
-              <ul>
+              <ul className="relative z-[1] mt-4 m-0 pl-[1.1rem] text-[var(--muted)]">
                 {project.impact.map((item) => (
-                  <li key={item}>{item}</li>
+                  <li key={item} className="leading-[1.8] text-pretty">
+                    {item}
+                  </li>
                 ))}
               </ul>
             </article>
@@ -966,67 +1096,124 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section section-split" id="education">
-        <article className="education-card reveal" data-reveal>
-          <span className="section-kicker">Education</span>
-          <h2>Academic Background</h2>
-          <div className="education-list">
+      <section
+        className="relative z-[1] mx-auto grid w-[min(1180px,calc(100%-2rem))] gap-[1.15rem] py-12 min-[1081px]:grid-cols-2 max-sm:w-[min(100%-1.15rem,1180px)]"
+        id="education"
+      >
+        <article
+          className="reveal rounded-[var(--radius-xl)] border border-[var(--surface-border)] bg-[var(--surface)] p-[1.55rem] shadow-[var(--shadow)] backdrop-blur-[16px]"
+          data-reveal
+        >
+          <span className="section-kicker inline-flex items-center gap-[0.55rem] text-[0.8rem] uppercase tracking-[0.18em] text-[var(--teal)] before:h-px before:w-[2.6rem] before:bg-[linear-gradient(90deg,transparent,currentColor)] before:content-['']">
+            Education
+          </span>
+          <h2 className="mt-[0.8rem] font-[family-name:var(--font-display)] text-[clamp(2rem,4.7vw,3.5rem)] leading-[1.14] tracking-[-0.05em] text-balance">
+            Academic Background
+          </h2>
+          <div className="mt-[1.35rem] grid gap-4">
             {educationItems.map((item) => (
-              <article key={item.institution} className="education-entry">
-                <h3>{item.institution}</h3>
-                <p>{item.location}</p>
-                <div className="education-entry-meta">
-                  <strong>{item.program}</strong>
-                  <span>{item.score}</span>
-                  <span>{item.duration}</span>
+              <article
+                key={item.institution}
+                className="rounded-[18px] border border-white/8 bg-white/[0.025] px-[1.15rem] py-[1.1rem]"
+              >
+                <h3 className="text-[1.05rem] text-[var(--text)]">
+                  {item.institution}
+                </h3>
+                <p className="mt-[0.35rem] mb-[0.8rem] text-[0.95rem] text-[var(--muted)]">
+                  {item.location}
+                </p>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-[0.65rem]">
+                  <strong className="text-[0.95rem] text-[var(--muted-strong)]">
+                    {item.program}
+                  </strong>
+                  <span className="text-[0.83rem] uppercase tracking-[0.05em] text-[var(--amber)]">
+                    {item.score}
+                  </span>
+                  <span className="text-[0.83rem] uppercase tracking-[0.05em] text-[var(--amber)]">
+                    {item.duration}
+                  </span>
                 </div>
               </article>
             ))}
           </div>
         </article>
 
-        <article className="achievement-card reveal" id="achievements" data-reveal>
-          <span className="section-kicker">Achievements</span>
-          <h2>Competitive energy, technical depth, and consistent follow-through.</h2>
-          <div className="achievement-list">
+        <article
+          className="reveal rounded-[var(--radius-xl)] border border-[var(--surface-border)] bg-[var(--surface)] p-[1.55rem] shadow-[var(--shadow)] backdrop-blur-[16px]"
+          id="achievements"
+          data-reveal
+        >
+          <span className="section-kicker inline-flex items-center gap-[0.55rem] text-[0.8rem] uppercase tracking-[0.18em] text-[var(--teal)] before:h-px before:w-[2.6rem] before:bg-[linear-gradient(90deg,transparent,currentColor)] before:content-['']">
+            Achievements
+          </span>
+          <h2 className="mt-[0.8rem] font-[family-name:var(--font-display)] text-[clamp(2rem,4.7vw,3.5rem)] leading-[1.14] tracking-[-0.05em] text-balance">
+            Competitive energy, technical depth, and consistent follow-through.
+          </h2>
+          <div className="mt-[1.35rem] grid gap-4">
             {achievements.map((achievement) => (
-              <div key={achievement} className="achievement-item">
-                <span className="achievement-icon" aria-hidden="true">
+              <div
+                key={achievement}
+                className="grid grid-cols-[auto_1fr] items-start gap-[0.8rem]"
+              >
+                <span
+                  className="mt-[0.12rem] grid size-[2.1rem] place-items-center rounded-full bg-[linear-gradient(135deg,rgba(245,166,35,0.18),rgba(0,212,170,0.12))] text-[var(--amber)]"
+                  aria-hidden="true"
+                >
                   <IconSpark />
                 </span>
-                <p>{achievement}</p>
+                <p className="text-[var(--muted)] leading-[1.8] text-pretty">
+                  {achievement}
+                </p>
               </div>
             ))}
           </div>
         </article>
       </section>
 
-      <section className="section contact-section" id="contact">
-        <div className="section-heading reveal" data-reveal>
-          <span className="section-kicker">Contact</span>
-          <h2>Let&apos;s build something useful, sharp, and memorable.</h2>
+      <section
+        className="relative z-[1] mx-auto w-[min(1180px,calc(100%-2rem))] py-12 pb-16 max-sm:w-[min(100%-1.15rem,1180px)]"
+        id="contact"
+      >
+        <div className="section-heading reveal mb-8 max-w-[48rem]" data-reveal>
+          <span className="section-kicker inline-flex items-center gap-[0.55rem] text-[0.8rem] uppercase tracking-[0.18em] text-[var(--teal)] before:h-px before:w-[2.6rem] before:bg-[linear-gradient(90deg,transparent,currentColor)] before:content-['']">
+            Contact
+          </span>
+          <h2 className="mt-[0.8rem] font-[family-name:var(--font-display)] text-[clamp(2rem,4.7vw,3.5rem)] leading-[1.14] tracking-[-0.05em] text-balance">
+            Let&apos;s build something useful, sharp, and memorable.
+          </h2>
         </div>
 
-        <div className="contact-card reveal" data-reveal>
-          <div className="contact-copy">
-            <p>
+        <div
+          className="reveal flex items-center justify-between gap-8 rounded-[var(--radius-xl)] border border-[var(--surface-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.025),transparent),var(--surface-strong)] p-[1.55rem] shadow-[var(--shadow)] backdrop-blur-[16px] max-[1080px]:grid"
+          data-reveal
+        >
+          <div className="max-w-[36rem]">
+            <p className="text-[var(--muted)] leading-[1.8] text-pretty">
               Open to internships, frontend engineering roles, and full-stack
               opportunities where product quality and execution matter equally.
             </p>
-            <a className="contact-mail" href={socialLinks.email}>
+            <a
+              className="mt-4 inline-block break-words font-[family-name:var(--font-display)] text-[clamp(1.5rem,3vw,2.4rem)] leading-[1.16]"
+              href={socialLinks.email}
+            >
               1107shifa@gmail.com
             </a>
           </div>
 
-          <div className="contact-actions">
-            <div className="social-row">
-              <a href={socialLinks.email} aria-label="Email Shifa">
+          <div className="mt-8 flex flex-wrap gap-[0.95rem] max-[1080px]:mt-0">
+            <div className="flex flex-wrap items-center gap-[0.8rem]">
+              <a
+                href={socialLinks.email}
+                aria-label="Email Shifa"
+                className="grid size-12 place-items-center rounded-full border border-white/12 bg-white/3 transition-[transform,background-color,border-color,box-shadow,color,opacity] duration-220 hover:-translate-y-0.5 hover:border-[rgba(0,212,170,0.32)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.2)]"
+              >
                 <IconMail />
               </a>
               <a
                 href={resolveLink(socialLinks.linkedin)}
                 {...linkProps(socialLinks.linkedin)}
                 aria-label="LinkedIn profile"
+                className="grid size-12 place-items-center rounded-full border border-white/12 bg-white/3 transition-[transform,background-color,border-color,box-shadow,color,opacity] duration-220 hover:-translate-y-0.5 hover:border-[rgba(0,212,170,0.32)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.2)]"
               >
                 <IconLinkedIn />
               </a>
@@ -1034,6 +1221,7 @@ export default function Home() {
                 href={resolveLink(socialLinks.github)}
                 {...linkProps(socialLinks.github)}
                 aria-label="GitHub profile"
+                className="grid size-12 place-items-center rounded-full border border-white/12 bg-white/3 transition-[transform,background-color,border-color,box-shadow,color,opacity] duration-220 hover:-translate-y-0.5 hover:border-[rgba(0,212,170,0.32)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.2)]"
               >
                 <IconGitHub />
               </a>
@@ -1041,13 +1229,14 @@ export default function Home() {
                 href={resolveLink(socialLinks.leetcode)}
                 {...linkProps(socialLinks.leetcode)}
                 aria-label="LeetCode profile"
+                className="grid size-12 place-items-center rounded-full border border-white/12 bg-white/3 transition-[transform,background-color,border-color,box-shadow,color,opacity] duration-220 hover:-translate-y-0.5 hover:border-[rgba(0,212,170,0.32)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.2)]"
               >
                 <IconLeetCode />
               </a>
             </div>
 
             <a
-              className="button button-primary"
+              className="inline-flex min-w-48 items-center justify-center rounded-full border border-[rgba(0,212,170,0.18)] bg-[linear-gradient(135deg,rgba(0,212,170,0.78),rgba(143,248,228,0.72))] px-[1.4rem] py-[0.96rem] font-bold text-[#07151a] shadow-[0_6px_14px_rgba(0,212,170,0.08)] transition-[transform,background-color,border-color,box-shadow,color,opacity] duration-220 hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(0,212,170,0.12)]"
               href="/resume/Shifa-Saeed-Resume.pdf"
               download
             >
