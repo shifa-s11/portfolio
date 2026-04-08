@@ -700,14 +700,14 @@ export default function Home() {
           href="#top"
           aria-label="Go to top"
         >
-          <span className="grid size-[2.6rem] place-items-center rounded-full bg-[linear-gradient(135deg,var(--teal),#90ffeb)] font-(family-name:--font-display) text-[1.1rem] font-extrabold text-[#071118]">
+          <span className="grid size-[2.6rem] place-items-center rounded-full bg-[linear-gradient(135deg,var(--teal),#90ffeb)] font-[family-name:var(--font-display)] text-[1.1rem] font-extrabold text-[#071118]">
             S
           </span>
           <div>
             <strong className="block whitespace-nowrap text-[0.95rem]">
               Shifa Saeed
             </strong>
-            <p className="mt-[0.16rem] text-[0.82rem] text-(--muted)">
+            <p className="mt-[0.16rem] text-[0.82rem] text-[var(--muted)]">
               Full-stack developer
             </p>
           </div>
@@ -721,7 +721,7 @@ export default function Home() {
             <a
               key={item.label}
               href={item.href}
-              className="rounded-full px-[0.82rem] py-[0.55rem] text-[0.93rem] text-(--muted) transition-[transform,background-color,border-color,box-shadow,color,opacity] duration-220 hover:bg-white/4.5 hover:text-(--text)"
+              className="rounded-full px-[0.82rem] py-[0.55rem] text-[0.93rem] text-[var(--muted)] transition-[transform,background-color,border-color,box-shadow,color,opacity] duration-220 hover:bg-white/[0.045] hover:text-[var(--text)]"
             >
               {item.label}
             </a>
@@ -805,7 +805,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative z-1 mx-auto w-[min(1180px,calc(100%-2rem))] py-12 max-sm:w-[min(100%-1.15rem,1180px)]" id="about">
+      <section className="relative z-[1] mx-auto w-[min(1180px,calc(100%-2rem))] py-12 max-sm:w-[min(100%-1.15rem,1180px)]" id="about">
         <div className="section-heading reveal mb-8 max-w-[48rem]" data-reveal>
           <span className="section-kicker inline-flex items-center gap-[0.55rem] text-[0.8rem] uppercase tracking-[0.18em] text-[var(--teal)] before:h-px before:w-[2.6rem] before:bg-[linear-gradient(90deg,transparent,currentColor)] before:content-['']">
             About
@@ -872,41 +872,102 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section" id="skills">
-        <div className="section-heading reveal" data-reveal>
-          <span className="section-kicker">Skills</span>
-          <h2>Chosen stacks for clarity, scale, and consistent product delivery.</h2>
+      <section
+        className="relative z-[1] mx-auto w-[min(1180px,calc(100%-2rem))] py-12 max-sm:w-[min(100%-1.15rem,1180px)]"
+        id="skills"
+      >
+        <div className="section-heading reveal mb-8 max-w-[52rem]" data-reveal>
+          <span className="section-kicker inline-flex items-center gap-[0.55rem] text-[0.8rem] uppercase tracking-[0.18em] text-[var(--teal)] before:h-px before:w-[2.6rem] before:bg-[linear-gradient(90deg,transparent,currentColor)] before:content-['']">
+            Skills
+          </span>
+          <h2 className="mt-[0.8rem] font-[family-name:var(--font-display)] text-[clamp(2rem,4.7vw,3.5rem)] leading-[1.14] tracking-[-0.05em] text-balance">
+            Chosen stacks for clarity, scale, and consistent product delivery.
+          </h2>
         </div>
 
-        <div className="skills-grid">
-          {skillGroups.map((group) => (
+        <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
+          {skillGroups.map((group, index) => (
             <article
               key={group.title}
-              className={`skill-card accent-${group.accent} reveal`}
+              className={[
+                "reveal overflow-hidden rounded-[var(--radius-xl)] border border-[var(--surface-border)] p-[1.55rem] shadow-[var(--shadow)] backdrop-blur-[16px]",
+                index === 0
+                  ? "xl:col-span-12 bg-[linear-gradient(135deg,rgba(0,212,170,0.1),rgba(255,255,255,0.02)_40%,rgba(245,166,35,0.06)),var(--surface-strong)]"
+                  : index === 1
+                    ? "xl:col-span-7 bg-[linear-gradient(180deg,rgba(245,166,35,0.1),transparent_24%),var(--surface)]"
+                    : index === 2
+                      ? "xl:col-span-5 bg-[linear-gradient(180deg,rgba(0,212,170,0.08),transparent_24%),var(--surface)]"
+                      : index === 3
+                        ? "xl:col-span-5 bg-[linear-gradient(135deg,rgba(255,255,255,0.03),rgba(0,212,170,0.05)),var(--surface)]"
+                        : "xl:col-span-7 bg-[linear-gradient(135deg,rgba(245,166,35,0.08),rgba(255,255,255,0.02)),var(--surface)]",
+              ].join(" ")}
               data-reveal
             >
-              <div className="skill-card-head">
-                <h3>{group.title}</h3>
-                <p>{group.description}</p>
-              </div>
-
-              <div className="skill-list">
-                {group.skills.map((skill) => (
-                  <div key={skill.name} className="skill-item">
-                    <div className="skill-meta">
-                      <span>{skill.name}</span>
-                      <span>{skill.level}%</span>
-                    </div>
-                    <div className="skill-track">
-                      <div
-                        className="skill-fill"
-                        data-skill-bar
-                        data-width={skill.level}
-                        style={{ ["--target-width" as string]: "0%" }}
-                      />
-                    </div>
+              <div
+                className={[
+                  "grid gap-6",
+                  index === 0 ? "lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start" : "",
+                ].join(" ")}
+              >
+                <div>
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={[
+                        "inline-flex h-10 min-w-10 items-center justify-center rounded-full border px-3 text-[0.72rem] font-semibold uppercase tracking-[0.18em]",
+                        group.accent === "teal"
+                          ? "border-[rgba(0,212,170,0.22)] bg-[rgba(0,212,170,0.1)] text-[var(--teal)]"
+                          : "border-[rgba(245,166,35,0.22)] bg-[rgba(245,166,35,0.1)] text-[var(--amber)]",
+                      ].join(" ")}
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="text-[0.75rem] uppercase tracking-[0.18em] text-[var(--muted-strong)]">
+                      {group.accent === "teal" ? "Core Capability" : "Delivery Layer"}
+                    </span>
                   </div>
-                ))}
+
+                  <h3 className="mt-5 font-[family-name:var(--font-display)] text-[clamp(1.7rem,3vw,2.3rem)] leading-[1.08]">
+                    {group.title}
+                  </h3>
+                  <p className="mt-3 max-w-[34rem] text-[var(--muted)] leading-[1.8] text-pretty">
+                    {group.description}
+                  </p>
+                </div>
+
+                <div
+                  className={[
+                    "grid gap-4",
+                    index === 0 ? "sm:grid-cols-2" : "",
+                  ].join(" ")}
+                >
+                  {group.skills.map((skill) => (
+                    <div
+                      key={skill.name}
+                      className="rounded-[22px] border border-white/8 bg-white/[0.035] p-4"
+                    >
+                      <div className="flex items-center justify-between gap-4">
+                        <span className="text-[0.98rem] text-[var(--text)]">{skill.name}</span>
+                        <span className="text-[0.88rem] text-[var(--muted)]">
+                          {skill.level}%
+                        </span>
+                      </div>
+
+                      <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-white/[0.07]">
+                        <div
+                          className={[
+                            "h-full rounded-full transition-[width] duration-[1150ms] [transition-timing-function:cubic-bezier(0.2,0.8,0.2,1)]",
+                            group.accent === "teal"
+                              ? "bg-[linear-gradient(90deg,rgba(0,212,170,0.54),var(--teal))]"
+                              : "bg-[linear-gradient(90deg,rgba(245,166,35,0.45),var(--amber))]",
+                          ].join(" ")}
+                          data-skill-bar
+                          data-width={skill.level}
+                          style={{ ["--target-width" as string]: "0%", width: "var(--target-width)" }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </article>
           ))}
@@ -1273,7 +1334,7 @@ export default function Home() {
               <a
                 href={socialLinks.email}
                 aria-label="Email Shifa"
-                className="grid size-12 place-items-center rounded-full border border-white/12 bg-white/3 transition-[transform,background-color,border-color,box-shadow,color,opacity] duration-220 hover:-translate-y-0.5 hover:border-[rgba(0,212,170,0.32)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.2)]"
+                className="grid size-12 place-items-center rounded-full border border-white/12 bg-white/[0.03] transition-[transform,background-color,border-color,box-shadow,color,opacity] duration-220 hover:-translate-y-0.5 hover:border-[rgba(0,212,170,0.32)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.2)]"
               >
                 <IconMail />
               </a>
@@ -1281,7 +1342,7 @@ export default function Home() {
                 href={resolveLink(socialLinks.linkedin)}
                 {...linkProps(socialLinks.linkedin)}
                 aria-label="LinkedIn profile"
-                className="grid size-12 place-items-center rounded-full border border-white/12 bg-white/3 transition-[transform,background-color,border-color,box-shadow,color,opacity] duration-220 hover:-translate-y-0.5 hover:border-[rgba(0,212,170,0.32)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.2)]"
+                className="grid size-12 place-items-center rounded-full border border-white/12 bg-white/[0.03] transition-[transform,background-color,border-color,box-shadow,color,opacity] duration-220 hover:-translate-y-0.5 hover:border-[rgba(0,212,170,0.32)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.2)]"
               >
                 <IconLinkedIn />
               </a>
@@ -1289,7 +1350,7 @@ export default function Home() {
                 href={resolveLink(socialLinks.github)}
                 {...linkProps(socialLinks.github)}
                 aria-label="GitHub profile"
-                className="grid size-12 place-items-center rounded-full border border-white/12 bg-white/3 transition-[transform,background-color,border-color,box-shadow,color,opacity] duration-220 hover:-translate-y-0.5 hover:border-[rgba(0,212,170,0.32)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.2)]"
+                className="grid size-12 place-items-center rounded-full border border-white/12 bg-white/[0.03] transition-[transform,background-color,border-color,box-shadow,color,opacity] duration-220 hover:-translate-y-0.5 hover:border-[rgba(0,212,170,0.32)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.2)]"
               >
                 <IconGitHub />
               </a>
@@ -1297,7 +1358,7 @@ export default function Home() {
                 href={resolveLink(socialLinks.leetcode)}
                 {...linkProps(socialLinks.leetcode)}
                 aria-label="LeetCode profile"
-                className="grid size-12 place-items-center rounded-full border border-white/12 bg-white/3 transition-[transform,background-color,border-color,box-shadow,color,opacity] duration-220 hover:-translate-y-0.5 hover:border-[rgba(0,212,170,0.32)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.2)]"
+                className="grid size-12 place-items-center rounded-full border border-white/12 bg-white/[0.03] transition-[transform,background-color,border-color,box-shadow,color,opacity] duration-220 hover:-translate-y-0.5 hover:border-[rgba(0,212,170,0.32)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.2)]"
               >
                 <IconLeetCode />
               </a>
