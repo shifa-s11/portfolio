@@ -218,8 +218,8 @@ const projects: ProjectItem[] = [
   },
   {
     title: "AI Mock Interview Platform",
-    date: "Live Project",
-    status: "GenAI Build",
+    date: "Mar 2026",
+    status: "Completed",
     stack: ["Next.js", "TypeScript", "LLM APIs", "Voice Interaction"],
     description:
       "A GenAI-powered mock interview platform designed for contextual follow-up questioning, adaptive difficulty, and realistic interview practice.",
@@ -439,6 +439,18 @@ function getProjectStatusClass(status?: string) {
   return "bg-[rgba(64,156,255,0.12)] border border-[rgba(64,156,255,0.24)] text-[#8fc2ff]";
 }
 
+function getProjectCardTone(index: number) {
+  if (index % 3 === 0) {
+    return "before:bg-[linear-gradient(135deg,rgba(0,212,170,0.12),transparent_34%),linear-gradient(225deg,rgba(245,166,35,0.05),transparent_30%)] after:bg-[radial-gradient(circle,rgba(0,212,170,0.14),transparent_68%)]";
+  }
+
+  if (index % 3 === 1) {
+    return "before:bg-[linear-gradient(135deg,rgba(245,166,35,0.1),transparent_34%),linear-gradient(225deg,rgba(0,212,170,0.06),transparent_30%)] after:bg-[radial-gradient(circle,rgba(245,166,35,0.12),transparent_68%)]";
+  }
+
+  return "before:bg-[linear-gradient(135deg,rgba(143,248,228,0.08),transparent_34%),linear-gradient(225deg,rgba(64,156,255,0.08),transparent_30%)] after:bg-[radial-gradient(circle,rgba(64,156,255,0.14),transparent_68%)]";
+}
+
 export default function Home() {
   const [roleIndex, setRoleIndex] = useState(0);
   const [typedText, setTypedText] = useState("");
@@ -448,9 +460,9 @@ export default function Home() {
   const projectOrder = [
     "EduVerse",
     "AI Mock Interview Platform",
+    "Droom",
     "BuzzBook",
     "Vigilance+",
-    "Droom",
     "OpsLens AI",
   ];
   const orderedProjects = [...projects].sort(
@@ -1016,7 +1028,8 @@ export default function Home() {
               key={project.title}
               className={[
                 "reveal",
-                "relative flex min-h-0 flex-col overflow-hidden rounded-[var(--radius-xl)] border border-[var(--surface-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.025),transparent_28%),var(--surface)] p-[1.55rem] shadow-[var(--shadow)] backdrop-blur-[16px] transition-[transform,border-color,box-shadow] duration-220 before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(135deg,rgba(0,212,170,0.08),transparent_34%),linear-gradient(225deg,rgba(245,166,35,0.06),transparent_30%)] before:opacity-90 before:content-[''] after:pointer-events-none after:absolute after:right-[-20%] after:bottom-[-35%] after:h-[180px] after:w-[180px] after:rounded-full after:bg-[radial-gradient(circle,rgba(0,212,170,0.12),transparent_68%)] after:content-[''] hover:border-white/[0.16] hover:shadow-[0_26px_80px_rgba(0,0,0,0.46)]",
+                "relative flex min-h-0 flex-col overflow-hidden rounded-[var(--radius-xl)] border border-[var(--surface-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.025),transparent_28%),var(--surface)] p-[1.55rem] shadow-[var(--shadow)] backdrop-blur-[16px] transition-[transform,border-color,box-shadow] duration-220 before:pointer-events-none before:absolute before:inset-0 before:opacity-90 before:content-[''] after:pointer-events-none after:absolute after:right-[-20%] after:bottom-[-35%] after:h-[180px] after:w-[180px] after:rounded-full after:content-[''] hover:border-white/[0.16] hover:shadow-[0_26px_80px_rgba(0,0,0,0.46)]",
+                getProjectCardTone(index),
                 project.size === "wide" ? "min-[1081px]:col-span-12 min-[1081px]:min-h-[320px]" : "min-[1081px]:col-span-6",
                 index === 2 ? "min-[1081px]:col-span-7" : "",
                 index === 3 ? "min-[1081px]:col-span-5" : "",
@@ -1028,8 +1041,11 @@ export default function Home() {
               data-reveal
               data-tilt-card
             >
-              <div className="relative z-[1] flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="relative z-[1] flex flex-col gap-4 border-b border-white/8 pb-5 sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex flex-wrap items-center gap-[0.55rem]">
+                  <span className="inline-flex h-8 min-w-8 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-2 text-[0.72rem] font-semibold tracking-[0.18em] text-[var(--muted-strong)]">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
                   <span className="text-[0.86rem] uppercase tracking-[0.09em] text-[var(--amber)]">
                     {project.date}
                   </span>
@@ -1066,31 +1082,83 @@ export default function Home() {
                 </div>
               </div>
 
-              <h3 className="relative z-[1] mt-[0.55rem] font-[family-name:var(--font-display)] text-[clamp(1.4rem,3.6vw,1.8rem)] leading-[1.12] sm:text-[1.45rem]">
-                {project.title}
-              </h3>
-              <p className="relative z-[1] mt-3 text-[var(--muted)] leading-[1.8] text-pretty">
-                {project.description}
-              </p>
+              <div
+                className={[
+                  "relative z-[1] mt-5 grid gap-5 xl:items-start",
+                  index % 2 === 0
+                    ? "xl:grid-cols-[minmax(0,1.2fr)_minmax(220px,0.8fr)]"
+                    : "xl:grid-cols-[minmax(220px,0.8fr)_minmax(0,1.2fr)]",
+                ].join(" ")}
+              >
+                <div className={index % 2 === 0 ? "" : "xl:order-2"}>
+                  <h3 className="font-[family-name:var(--font-display)] text-[clamp(1.45rem,3.6vw,2rem)] leading-[1.08]">
+                    {project.title}
+                  </h3>
+                  <p className="mt-3 text-[var(--muted)] leading-[1.8] text-pretty">
+                    {project.description}
+                  </p>
 
-              <div className="relative z-[1] mt-4 flex flex-wrap items-center gap-[0.8rem]">
-                {project.stack.map((tag) => (
-                  <span
-                    key={`${project.title}-${tag}`}
-                    className="rounded-full bg-white/[0.05] px-[0.76rem] py-[0.42rem] text-[0.82rem] text-[#d8def0]"
-                  >
-                    {tag}
-                  </span>
-                ))}
+                  <ul className="mt-5 m-0 pl-[1.1rem] text-[var(--muted)]">
+                    {project.impact.map((item) => (
+                      <li key={item} className="leading-[1.8] text-pretty">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div
+                  className={[
+                    "rounded-[24px] border p-4",
+                    index % 3 === 0
+                      ? "border-[rgba(0,212,170,0.14)] bg-[rgba(0,212,170,0.06)]"
+                      : index % 3 === 1
+                        ? "border-[rgba(245,166,35,0.16)] bg-[rgba(245,166,35,0.06)]"
+                        : "border-white/10 bg-white/[0.04]",
+                    index % 2 === 0 ? "" : "xl:order-1",
+                  ].join(" ")}
+                >
+                  <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
+                    Stack
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-[0.65rem]">
+                    {project.stack.map((tag) => (
+                      <span
+                        key={`${project.title}-${tag}`}
+                        className="rounded-full bg-white/[0.07] px-[0.76rem] py-[0.42rem] text-[0.8rem] text-[#d8def0]"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="mt-5 border-t border-white/8 pt-4">
+                    <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted-strong)]">
+                      Links
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-3">
+                      {project.github ? (
+                        <a
+                          href={resolveLink(project.github)}
+                          {...linkProps(project.github)}
+                          className="inline-flex items-center gap-[0.35rem] rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-[0.9rem] text-[var(--muted)] transition-colors duration-220 hover:text-[var(--text)]"
+                        >
+                          GitHub <IconArrow />
+                        </a>
+                      ) : null}
+                      {project.live ? (
+                        <a
+                          href={resolveLink(project.live)}
+                          {...linkProps(project.live)}
+                          className="inline-flex items-center gap-[0.35rem] rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-[0.9rem] text-[var(--muted)] transition-colors duration-220 hover:text-[var(--text)]"
+                        >
+                          Live <IconArrow />
+                        </a>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
               </div>
-
-              <ul className="relative z-[1] mt-4 m-0 pl-[1.1rem] text-[var(--muted)]">
-                {project.impact.map((item) => (
-                  <li key={item} className="leading-[1.8] text-pretty">
-                    {item}
-                  </li>
-                ))}
-              </ul>
             </article>
           ))}
         </div>
