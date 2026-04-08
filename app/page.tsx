@@ -451,6 +451,22 @@ function getProjectCardTone(index: number) {
   return "before:bg-[linear-gradient(135deg,rgba(143,248,228,0.08),transparent_34%),linear-gradient(225deg,rgba(64,156,255,0.08),transparent_30%)] after:bg-[radial-gradient(circle,rgba(64,156,255,0.14),transparent_68%)]";
 }
 
+function getSkillLevelLabel(level: number) {
+  if (level >= 90) {
+    return "Signature";
+  }
+
+  if (level >= 82) {
+    return "Strong";
+  }
+
+  if (level >= 72) {
+    return "Working";
+  }
+
+  return "Exploring";
+}
+
 export default function Home() {
   const [roleIndex, setRoleIndex] = useState(0);
   const [typedText, setTypedText] = useState("");
@@ -852,10 +868,19 @@ export default function Home() {
         </div>
 
         <div className="mt-5 grid gap-4 md:grid-cols-2">
-          {timelineMoments.map((item) => (
+          {timelineMoments.map((item, index) => (
             <article
               key={item.title}
-              className="reveal rounded-[var(--radius-xl)] border border-[var(--surface-border)] bg-[var(--surface)] p-[1.55rem] shadow-[var(--shadow)] backdrop-blur-[16px]"
+              className={[
+                "reveal rounded-[var(--radius-xl)] border p-[1.55rem] shadow-[var(--shadow)] backdrop-blur-[16px]",
+                index === 0
+                  ? "border-[rgba(0,212,170,0.14)] bg-[linear-gradient(135deg,rgba(0,212,170,0.12),rgba(255,255,255,0.025)_55%,rgba(16,24,45,0.92))]"
+                  : index === 1
+                    ? "border-[rgba(245,166,35,0.16)] bg-[linear-gradient(135deg,rgba(245,166,35,0.12),rgba(255,255,255,0.02)_52%,rgba(16,24,45,0.92))]"
+                    : index === 2
+                      ? "border-[rgba(130,170,255,0.18)] bg-[linear-gradient(135deg,rgba(130,170,255,0.12),rgba(255,255,255,0.02)_50%,rgba(14,22,40,0.94))]"
+                      : "border-[rgba(255,255,255,0.12)] bg-[linear-gradient(135deg,rgba(255,255,255,0.05),rgba(0,212,170,0.04)_45%,rgba(16,24,45,0.94))]",
+              ].join(" ")}
               data-reveal
             >
               <span className="text-[0.86rem] uppercase tracking-[0.09em] text-[var(--amber)]">
@@ -947,12 +972,39 @@ export default function Home() {
                     >
                       <div className="flex items-center justify-between gap-4">
                         <span className="text-[0.98rem] text-[var(--text)]">{skill.name}</span>
-                        <span className="text-[0.88rem] text-[var(--muted)]">
-                          {skill.level}%
+                        <span
+                          className={[
+                            "rounded-full px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em]",
+                            group.accent === "teal"
+                              ? "bg-[rgba(0,212,170,0.1)] text-[var(--teal)]"
+                              : "bg-[rgba(245,166,35,0.12)] text-[var(--amber)]",
+                          ].join(" ")}
+                        >
+                          {getSkillLevelLabel(skill.level)}
                         </span>
                       </div>
 
-                      <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-white/[0.07]">
+                      <div className="mt-3 flex items-center gap-2">
+                        {Array.from({ length: 5 }).map((_, levelIndex) => {
+                          const active = skill.level >= (levelIndex + 1) * 20;
+
+                          return (
+                            <span
+                              key={`${skill.name}-${levelIndex}`}
+                              className={[
+                                "h-2.5 flex-1 rounded-full transition-colors duration-300",
+                                active
+                                  ? group.accent === "teal"
+                                    ? "bg-[linear-gradient(90deg,rgba(0,212,170,0.52),var(--teal))]"
+                                    : "bg-[linear-gradient(90deg,rgba(245,166,35,0.42),var(--amber))]"
+                                  : "bg-white/[0.07]",
+                              ].join(" ")}
+                            />
+                          );
+                        })}
+                      </div>
+
+                      <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/[0.05]">
                         <div
                           className={[
                             "h-full rounded-full transition-[width] duration-[1150ms] [transition-timing-function:cubic-bezier(0.2,0.8,0.2,1)]",
