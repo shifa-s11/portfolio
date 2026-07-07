@@ -227,8 +227,8 @@ const projects: ProjectItem[] = [
       "Built a mock interview workflow with Next.js, TypeScript, and LLM APIs, achieving 90%+ contextual relevance in follow-up questions and reducing response latency by 40%.",
       "Implemented adaptive difficulty, voice interaction, and AI-generated scorecards, increasing user engagement by 60% and improving interview simulation accuracy by 35%.",
     ],
-    github: "https://github.com/shifa-s11/[PLACEHOLDER]",
-    live: "[PLACEHOLDER]",
+    github: "https://github.com/shifa-s11/thinkly",
+    live: "https://thinkly-seven.vercel.app/",
     size: "wide",
   },
   {
