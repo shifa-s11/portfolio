@@ -13,15 +13,23 @@ const syne = Syne({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ||
+      (process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : "http://localhost:3000"),
+  ),
   title: {
-    default: "Shifa Saeed | Full Stack Developer",
+    default: "Shifa Saeed | Full Stack Developer & Freelancer",
     template: "%s | Shifa Saeed",
   },
   description:
-    "Portfolio of Shifa Saeed, a full-stack developer building polished, scalable web products with React, Next.js, Node.js, and thoughtful UI engineering.",
+    "Portfolio of Shifa Saeed, a full-stack developer and freelancer building polished, scalable web products with React, Next.js, Node.js, and thoughtful UI engineering.",
   keywords: [
     "Shifa Saeed",
     "Full Stack Developer",
+    "Freelancer",
+    "Freelance Developer",
     "Frontend Developer",
     "Next.js Portfolio",
     "React Developer",

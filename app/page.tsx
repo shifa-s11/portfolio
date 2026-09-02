@@ -3,11 +3,19 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-type SkillGroup = {
+type SkillItem = {
+  name: string;
+  level: number;
+};
+
+type SkillCapability = {
+  id: string;
+  icon: string;
   title: string;
-  accent: "teal" | "amber";
+  subtext: string;
+  tagline: string;
   description: string;
-  skills: Array<{ name: string; level: number }>;
+  skills: SkillItem[];
 };
 
 type ExperienceItem = {
@@ -15,6 +23,9 @@ type ExperienceItem = {
   role: string;
   dates: string;
   location?: string;
+  link?: string;
+  linkText?: string;
+  isCurrent?: boolean;
   points: string[];
 };
 
@@ -32,6 +43,7 @@ type ProjectItem = {
 
 const roles = [
   "Full Stack Developer",
+  "Freelance Developer",
   "Frontend Engineer",
   "GenAI Focused Developer",
 ];
@@ -65,9 +77,9 @@ const timelineMoments = [
     body: "Shipped frontend and full-stack work across SpiceCatch and Webinar Leads Hub, with measurable gains in performance, system reuse, and real-time operations.",
   },
   {
-    label: "Now",
-    title: "Focused on thoughtful product engineering",
-    body: "Building fast, API-driven interfaces that feel polished, accessible, and dependable under real usage.",
+    label: "Apr 2026 - Present",
+    title: "Fundvice & Freelance Platforms",
+    body: "Architecting multi-tenant AI recruitment platforms (fawin.in) with Next.js and Supabase, alongside engineering freelance client web platforms like Pangea Performance.",
   },
 ];
 
@@ -95,87 +107,142 @@ const educationItems = [
   },
 ];
 
-const skillGroups: SkillGroup[] = [
+const skillCapabilities: SkillCapability[] = [
   {
-    title: "Languages",
-    accent: "teal",
-    description: "Core languages used for product delivery, problem solving, and day-to-day implementation.",
-    skills: [
-      { name: "JavaScript", level: 92 },
-      { name: "TypeScript", level: 88 },
-      { name: "HTML", level: 94 },
-      { name: "Python", level: 80 },
-      { name: "C / C++", level: 85},
-    ],
-  },
-  {
-    title: "Frontend",
-    accent: "amber",
-    description: "Interface systems shaped around responsiveness, reusable UI, and state clarity.",
+    id: "frontend",
+    icon: "⚛️",
+    title: "Frontend Systems",
+    subtext: "React.js, Next.js & UI",
+    tagline: "High-performance interfaces, responsive design, and fluid motion",
+    description:
+      "Interface systems shaped around responsive performance, reusable component systems, accessible primitives, and state clarity.",
     skills: [
       { name: "React.js", level: 93 },
       { name: "Next.js", level: 91 },
       { name: "Tailwind CSS", level: 89 },
-      { name: "Redux", level: 84 },
       { name: "Zustand", level: 82 },
+      { name: "Redux", level: 84 },
       { name: "React Native", level: 68 },
     ],
   },
   {
-    title: "Backend",
-    accent: "teal",
-    description: "API-driven systems with secure flows, real-time communication, and service integrations.",
+    id: "backend",
+    icon: "⚡",
+    title: "Backend & APIs",
+    subtext: "Node, Express & Supabase",
+    tagline: "Scalable services, multi-tenant isolation, and secure APIs",
+    description:
+      "API-driven systems with secure workspace isolation, role-based access control, real-time webhooks, and scalable relational data flows.",
     skills: [
       { name: "Node.js", level: 88 },
-      { name: "Express.js", level: 84 },
       { name: "REST APIs", level: 90 },
-      { name: "WebSocket", level: 82 },
+      { name: "Express.js", level: 84 },
+      { name: "Supabase", level: 86 },
       { name: "FastAPI", level: 73 },
     ],
   },
   {
-    title: "Data Analysis",
-    accent: "teal",
-    description: "Libraries used for data handling, analysis workflows, and exploratory problem solving.",
+    id: "languages",
+    icon: "💻",
+    title: "Core Languages",
+    subtext: "TypeScript, Python & C++",
+    tagline: "Type-safe logic, algorithms, and production problem-solving",
+    description:
+      "Foundational languages used for day-to-day product execution, algorithmic problem solving, system programming, and data manipulation.",
     skills: [
-      { name: "NumPy", level: 76 },
-      { name: "Pandas", level: 80 },
-      { name: "Matplotlib", level: 72 },
-      { name: "Seaborn", level: 70 },
+      { name: "JavaScript", level: 92 },
+      { name: "TypeScript", level: 88 },
+      { name: "HTML5 / CSS3", level: 94 },
+      { name: "Python", level: 80 },
+      { name: "C / C++", level: 85 },
     ],
   },
   {
-    title: "Tools",
-    accent: "amber",
-    description: "The delivery layer for deployment, collaboration, infrastructure, and iteration speed.",
+    id: "databases",
+    icon: "🗄️",
+    title: "Databases & Cache",
+    subtext: "MongoDB, PostgreSQL & Redis",
+    tagline: "Relational modeling, document stores, and high-speed caching",
+    description:
+      "Relational databases and NoSQL document stores with Redis session management, atomic credit transaction logging, and indexed search.",
     skills: [
       { name: "MongoDB", level: 86 },
       { name: "PostgreSQL / SQL", level: 79 },
       { name: "Redis", level: 76 },
-      { name: "Docker", level: 72 },
-      { name: "AWS / Cloudflare / Vercel", level: 75 },
+    ],
+  },
+  {
+    id: "realtime",
+    icon: "🔄",
+    title: "Real-Time & FSM",
+    subtext: "WebSocket, Socket.IO & Events",
+    tagline: "Live data feeds, finite state machines, and event orchestration",
+    description:
+      "Engineered candidate lifecycle state engines with FSM, live booking holds with Socket.IO, and real-time visitor management.",
+    skills: [
+      { name: "WebSocket", level: 82 },
+      { name: "Socket.IO", level: 85 },
+      { name: "FSM State Engines", level: 88 },
+      { name: "Event Webhooks", level: 86 },
+    ],
+  },
+  {
+    id: "genai",
+    icon: "🧠",
+    title: "GenAI & Voice",
+    subtext: "LLM APIs & Voice Screening",
+    tagline: "Contextual prompt pipelines, voice screening, and AI agents",
+    description:
+      "Integrated automated voice screening, contextual LLM follow-up interview logic, adaptive difficulty, and AI-generated scorecards.",
+    skills: [
+      { name: "LLM APIs", level: 85 },
+      { name: "Voice Screening", level: 82 },
+      { name: "Contextual AI Workflows", level: 80 },
+    ],
+  },
+  {
+    id: "devops",
+    icon: "🚀",
+    title: "DevOps & Cloud",
+    subtext: "Docker, AWS, Vercel & CI/CD",
+    tagline: "Containerization, edge delivery, and continuous deployment",
+    description:
+      "The deployment layer for fast iteration, edge optimization with Cloudflare, Vercel hosting, AWS services, and automated CI/CD pipelines.",
+    skills: [
       { name: "Git / GitHub / CI/CD", level: 88 },
+      { name: "Vercel & Cloudflare", level: 78 },
+      { name: "AWS", level: 75 },
+      { name: "Docker", level: 72 },
+    ],
+  },
+  {
+    id: "algorithms",
+    icon: "📊",
+    title: "DSA & Data Science",
+    subtext: "250+ LeetCode, Pandas & NumPy",
+    tagline: "Algorithmic thinking, data transformation, and visualization",
+    description:
+      "Strong data structures and algorithms foundation with 250+ LeetCode problems solved, paired with Python data analysis toolkits.",
+    skills: [
+      { name: "Data Structures & Algorithms", level: 90 },
+      { name: "Pandas", level: 80 },
+      { name: "NumPy", level: 76 },
+      { name: "Matplotlib & Seaborn", level: 72 },
     ],
   },
 ];
 
 const experiences: ExperienceItem[] = [
   {
-    company: "Gulnazion Technologies",
-    role: "Frontend Developer Intern",
-    dates: "Jun 2025 - Aug 2025",
+    company: "Fundvice",
+    role: "Full Stack Developer Intern",
+    dates: "Apr 2026 - Present",
+    link: "https://fawin.in",
+    linkText: "fawin.in",
+    isCurrent: true,
     points: [
-      "Built core CRM and lead pipeline experiences including list and Kanban views, 7-stage drag-and-drop tracking, and one-click lead-to-client conversion flows.",
-      "Implemented qualification scoring, follow-up activity workflows, CSV lead import, and decision-maker tracking to streamline agency sales operations.",
-    ],
-  },
-  {
-    company: "SpiceCatch",
-    role: "Frontend Developer Intern",
-    dates: "Sep 2025 - Dec 2025",
-    points: [
-      "Developed and refined Next.js interfaces with Zustand, reducing page load time by 35% and improving engagement.",
-      "Built reusable Radix UI components that improved design consistency and accelerated development by 40%.",
+      "Architected and developed the full-stack infrastructure for a multi-tenant AI recruitment platform using Next.js, Supabase, and relational databases, establishing secure workspace isolation and granular role-based access control.",
+      "Engineered a candidate lifecycle state engine using FSM to orchestrate recruiting pipelines, integrating automated voice screening, real-time webhooks, and atomic credit transaction logging.",
     ],
   },
   {
@@ -183,8 +250,24 @@ const experiences: ExperienceItem[] = [
     role: "Full Stack Developer Intern",
     dates: "Dec 2025 - Feb 2026",
     points: [
-      "Integrated WhatsApp automation, Zoom APIs, and event-driven webhooks into a CRM-style webinar platform.",
-      "Enabled real-time communication workflows and smoother coordination across webinar operations.",
+      "Integrated third-party services such as WhatsApp automation, Zoom APIs, and event-driven webhooks into a CRM-style webinar platform built with React/Nest.js enabling real-time communication workflows and seamless coordination.",
+    ],
+  },
+  {
+    company: "SpiceCatch",
+    role: "Frontend Developer Intern",
+    dates: "Sep 2025 - Dec 2025",
+    points: [
+      "Built a performant Next.js frontend using Zustand and Radix UI, reducing page load time by 35% and boosting development efficiency by 40% through reusable, accessible components that ensured a consistent, scalable design system.",
+    ],
+  },
+  {
+    company: "Gulnazion Technologies",
+    role: "Frontend Developer Intern",
+    dates: "Jun 2025 - Aug 2025",
+    points: [
+      "Built core CRM and lead pipeline experiences including list and Kanban views, 7-stage drag-and-drop tracking, and one-click lead-to-client conversion flows.",
+      "Implemented qualification scoring, follow-up activity workflows, CSV lead import, and decision-maker tracking to streamline agency sales operations.",
     ],
   },
 ];
@@ -201,6 +284,21 @@ const responsibility = {
 };
 
 const projects: ProjectItem[] = [
+  {
+    title: "Pangea Performance",
+    date: "2026",
+    status: "Freelance Project",
+    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "REST APIs"],
+    description:
+      "A client-focused freelance web application developed with modern frontend architecture, responsive design, and seamless interactive workflows.",
+    impact: [
+      "Architected and delivered the responsive frontend and user interface tailored to client specifications with modern UI/UX principles.",
+      "Optimized rendering speed, asset delivery, and interactive workflows across devices to provide a fluid, accessible digital experience.",
+    ],
+    github: null,
+    live: "https://pangeaperformance.com",
+    size: "wide",
+  },
   {
     title: "EduVerse",
     date: "Sep 2025",
@@ -390,6 +488,10 @@ function resolveLink(href?: string | null) {
     return "#contact";
   }
 
+  if (href.startsWith("www.")) {
+    return `//${href}`;
+  }
+
   return href;
 }
 
@@ -405,6 +507,10 @@ function getProjectStatusTone(status?: string) {
   }
 
   const normalized = status.toLowerCase();
+
+  if (normalized.includes("freelance")) {
+    return "freelance";
+  }
 
   if (normalized.includes("upcoming")) {
     return "upcoming";
@@ -426,6 +532,10 @@ function getProjectStatusClass(status?: string) {
 
   if (tone === "featured") {
     return "bg-[rgba(0,212,170,0.1)] border border-[rgba(0,212,170,0.2)] text-[var(--teal)]";
+  }
+
+  if (tone === "freelance") {
+    return "bg-[rgba(0,212,170,0.14)] border border-[rgba(0,212,170,0.3)] text-[var(--teal)]";
   }
 
   if (tone === "ongoing") {
@@ -472,9 +582,13 @@ export default function Home() {
   const [typedText, setTypedText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [isNavScrolled, setIsNavScrolled] = useState(false);
+  const [selectedCapabilityIndex, setSelectedCapabilityIndex] = useState(0);
+  const selectedCapability =
+    skillCapabilities[selectedCapabilityIndex] ?? skillCapabilities[0];
   const heroRef = useRef<HTMLCanvasElement | null>(null);
   const projectOrder = [
     "EduVerse",
+    "Pangea Performance",
     "AI Mock Interview Platform",
     "Droom",
     "BuzzBook",
@@ -724,7 +838,7 @@ export default function Home() {
               Shifa Saeed
             </strong>
             <p className="mt-[0.16rem] text-[0.82rem] text-[var(--muted)]">
-              Full-stack developer
+              Full-stack developer &amp; freelancer
             </p>
           </div>
         </a>
@@ -748,7 +862,7 @@ export default function Home() {
       <section className="hero-section" id="top">
         <div className="hero-copy">
           <div className="eyebrow reveal is-visible">
-            Developer portfolio for product-focused, frontend-driven full-stack work
+            Developer &amp; Freelancer portfolio for product-focused, full-stack work
           </div>
 
           <p className="hero-intro reveal is-visible">
@@ -898,111 +1012,270 @@ export default function Home() {
       </section>
 
       <section
-        className="relative z-[1] mx-auto w-[min(1180px,calc(100%-2rem))] py-12 max-sm:w-[min(100%-1.15rem,1180px)]"
+        className="relative z-[1] mx-auto w-[min(1180px,calc(100%-2rem))] py-16 max-sm:w-[min(100%-1.15rem,1180px)]"
         id="skills"
       >
-        <div className="section-heading reveal mb-8 max-w-[52rem]" data-reveal>
-          <span className="section-kicker inline-flex items-center gap-[0.55rem] text-[0.8rem] uppercase tracking-[0.18em] text-[var(--teal)] before:h-px before:w-[2.6rem] before:bg-[linear-gradient(90deg,transparent,currentColor)] before:content-['']">
-            Skills
-          </span>
-          <h2 className="mt-[0.8rem] font-[family-name:var(--font-display)] text-[clamp(2rem,4.7vw,3.5rem)] leading-[1.14] tracking-[-0.05em] text-balance">
-            Chosen stacks for clarity, scale, and consistent product delivery.
+        {/* Section Heading - Centered Pangea Style */}
+        <div className="reveal mb-12 text-center" data-reveal>
+          <div className="flex justify-center">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(245,166,35,0.35)] bg-[rgba(245,166,35,0.08)] px-4 py-1.5 text-[0.76rem] font-semibold uppercase tracking-[0.2em] text-[var(--amber)] shadow-[0_0_20px_rgba(245,166,35,0.12)]">
+              <span className="size-1.5 rounded-full bg-[var(--amber)] animate-pulse" />
+              Core Capabilities &amp; Stack
+            </span>
+          </div>
+
+          <h2 className="mt-4 font-[family-name:var(--font-display)] text-[clamp(2.2rem,5vw,3.8rem)] leading-[1.08] tracking-[-0.04em] text-white text-balance">
+            Skills We Command
           </h2>
+
+          <p className="mx-auto mt-4 max-w-[42rem] text-[0.98rem] leading-[1.75] text-[var(--muted)] text-pretty">
+            Modern frameworks, scalable backend architectures, and production toolchains calibrated for high-performance software engineering.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
-          {skillGroups.map((group, index) => (
-            <article
-              key={group.title}
-              className={[
-                "reveal overflow-hidden rounded-[var(--radius-xl)] border border-[var(--surface-border)] p-[1.55rem] shadow-[var(--shadow)] backdrop-blur-[16px]",
-                index === 0
-                  ? "xl:col-span-12 bg-[linear-gradient(135deg,rgba(0,212,170,0.1),rgba(255,255,255,0.02)_40%,rgba(245,166,35,0.06)),var(--surface-strong)]"
-                  : index === 1
-                    ? "xl:col-span-7 bg-[linear-gradient(180deg,rgba(245,166,35,0.1),transparent_24%),var(--surface)]"
-                    : index === 2
-                      ? "xl:col-span-5 bg-[linear-gradient(180deg,rgba(0,212,170,0.08),transparent_24%),var(--surface)]"
-                      : index === 3
-                        ? "xl:col-span-5 bg-[linear-gradient(135deg,rgba(255,255,255,0.03),rgba(0,212,170,0.05)),var(--surface)]"
-                        : "xl:col-span-7 bg-[linear-gradient(135deg,rgba(245,166,35,0.08),rgba(255,255,255,0.02)),var(--surface)]",
-              ].join(" ")}
-              data-reveal
-            >
-              <div
-                className={[
-                  "grid gap-6",
-                  index === 0 ? "lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start" : "",
-                ].join(" ")}
-              >
+        {/* Constellation Canvas with Staggered Capability Cards */}
+        <div className="relative py-4">
+          {/* Orbital Background Vector Lines & Star Nodes */}
+          <svg
+            className="pointer-events-none absolute inset-0 -top-6 h-[calc(100%+3rem)] w-full opacity-35"
+            viewBox="0 0 1000 480"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M 40 140 Q 280 40 520 160 T 960 110"
+              fill="none"
+              stroke="rgba(245, 166, 35, 0.22)"
+              strokeWidth="1.5"
+              strokeDasharray="4 6"
+            />
+            <path
+              d="M 60 360 Q 320 460 620 330 T 940 380"
+              fill="none"
+              stroke="rgba(245, 166, 35, 0.18)"
+              strokeWidth="1.5"
+              strokeDasharray="4 6"
+            />
+            <path
+              d="M 120 70 Q 500 260 880 160"
+              fill="none"
+              stroke="rgba(0, 212, 170, 0.16)"
+              strokeWidth="1"
+              strokeDasharray="3 7"
+            />
+            <circle cx="120" cy="70" r="3" fill="var(--amber)" opacity="0.9" />
+            <circle cx="280" cy="40" r="2.5" fill="var(--amber)" opacity="0.7" />
+            <circle cx="520" cy="160" r="3.5" fill="var(--amber)" opacity="0.9" />
+            <circle cx="720" cy="130" r="2.5" fill="var(--teal)" opacity="0.7" />
+            <circle cx="880" cy="160" r="3" fill="var(--amber)" opacity="0.8" />
+            <circle cx="320" cy="460" r="3" fill="var(--amber)" opacity="0.8" />
+            <circle cx="620" cy="330" r="3.5" fill="var(--amber)" opacity="0.9" />
+            <circle cx="940" cy="380" r="2.5" fill="var(--teal)" opacity="0.7" />
+          </svg>
+
+          {/* Desktop & Tablet Constellation Field (Organic, Randomized, Floating, Zero Overlap) */}
+          <div
+            className="reveal relative z-[1] mx-auto hidden min-h-[460px] w-full max-w-[1080px] md:block"
+            data-reveal
+          >
+            {skillCapabilities.map((item, index) => {
+              const isSelected = selectedCapabilityIndex === index;
+              const positions = [
+                "left-[2%] top-[6%]",
+                "left-[27%] top-[2%]",
+                "left-[53%] top-[9%]",
+                "right-[2%] top-[3%]",
+                "left-[4%] bottom-[6%]",
+                "left-[29%] bottom-[2%]",
+                "left-[55%] bottom-[10%]",
+                "right-[3%] bottom-[5%]",
+              ];
+              const floatClass = `card-float-${index % 8}`;
+
+              return (
+                <div
+                  key={item.id}
+                  className={`absolute ${positions[index % positions.length]} ${floatClass}`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setSelectedCapabilityIndex(index)}
+                    className={[
+                      "group relative flex min-h-[108px] w-[192px] flex-col items-center justify-between rounded-2xl p-3.5 text-center transition-all duration-220 cursor-pointer backdrop-blur-md",
+                      isSelected
+                        ? "bg-[rgba(245,166,35,0.14)] border-2 border-[var(--amber)] shadow-[0_0_32px_rgba(245,166,35,0.34),inset_0_0_18px_rgba(245,166,35,0.08)] scale-105 z-10"
+                        : "bg-[#0b0e18]/90 border border-white/10 hover:border-white/25 hover:bg-[#121626] hover:scale-105 active:scale-95",
+                    ].join(" ")}
+                    aria-pressed={isSelected}
+                    aria-label={`${item.title} capability - click to inspect details`}
+                  >
+                    {/* Top: Icon & Indicator Dot */}
+                    <div className="flex w-full items-center justify-between">
+                      <span className="text-2xl transition-transform duration-220 group-hover:scale-110">
+                        {item.icon}
+                      </span>
+                      <span
+                        className={[
+                          "size-2 rounded-full transition-all duration-220",
+                          isSelected
+                            ? "bg-[var(--amber)] shadow-[0_0_8px_var(--amber)] scale-125"
+                            : "bg-white/15 group-hover:bg-white/40",
+                        ].join(" ")}
+                      />
+                    </div>
+
+                    {/* Middle & Bottom: Title & Monospace Subtext */}
+                    <div className="mt-2 w-full">
+                      <h3
+                        className={[
+                          "font-[family-name:var(--font-display)] text-[0.92rem] font-bold tracking-tight transition-colors line-clamp-1",
+                          isSelected ? "text-white" : "text-[var(--text)] group-hover:text-white",
+                        ].join(" ")}
+                      >
+                        {item.title}
+                      </h3>
+                      <p
+                        className={[
+                          "mt-1 text-[0.72rem] font-mono leading-tight transition-colors line-clamp-1",
+                          isSelected ? "text-[var(--amber)]" : "text-[var(--muted)] group-hover:text-white/75",
+                        ].join(" ")}
+                      >
+                        {item.subtext}
+                      </p>
+                    </div>
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Mobile Grid (< md): Scaled Floating Cards */}
+          <div
+            className="reveal relative z-[1] grid grid-cols-2 gap-3 max-w-[460px] mx-auto md:hidden"
+            data-reveal
+          >
+            {skillCapabilities.map((item, index) => {
+              const isSelected = selectedCapabilityIndex === index;
+              const floatClass = `card-float-${index % 8}`;
+
+              return (
+                <div key={`mob-${item.id}`} className={floatClass}>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedCapabilityIndex(index)}
+                    className={[
+                      "group relative flex min-h-[102px] w-full flex-col items-center justify-between rounded-xl p-3 text-center transition-all duration-220 cursor-pointer backdrop-blur-md",
+                      isSelected
+                        ? "bg-[rgba(245,166,35,0.14)] border-2 border-[var(--amber)] shadow-[0_0_24px_rgba(245,166,35,0.3)] scale-[1.03]"
+                        : "bg-[#0b0e18]/90 border border-white/10 hover:border-white/25 hover:bg-[#121626]",
+                    ].join(" ")}
+                    aria-pressed={isSelected}
+                    aria-label={`${item.title} capability`}
+                  >
+                    <div className="flex w-full items-center justify-between">
+                      <span className="text-2xl">{item.icon}</span>
+                      <span
+                        className={[
+                          "size-2 rounded-full",
+                          isSelected
+                            ? "bg-[var(--amber)] shadow-[0_0_6px_var(--amber)]"
+                            : "bg-white/15",
+                        ].join(" ")}
+                      />
+                    </div>
+                    <div className="mt-1.5 w-full">
+                      <h3
+                        className={[
+                          "font-[family-name:var(--font-display)] text-[0.86rem] font-bold tracking-tight line-clamp-1",
+                          isSelected ? "text-white" : "text-[var(--text)]",
+                        ].join(" ")}
+                      >
+                        {item.title}
+                      </h3>
+                      <p
+                        className={[
+                          "mt-0.5 text-[0.68rem] font-mono leading-tight line-clamp-1",
+                          isSelected ? "text-[var(--amber)]" : "text-[var(--muted)]",
+                        ].join(" ")}
+                      >
+                        {item.subtext}
+                      </p>
+                    </div>
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Detailed Skill Inspection Drawer for Selected Capability */}
+          <div
+            className="reveal relative z-[1] mt-14 rounded-[var(--radius-xl)] border border-[rgba(245,166,35,0.24)] bg-[linear-gradient(180deg,rgba(245,166,35,0.09),rgba(11,14,24,0.94)),var(--surface)] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.5)] backdrop-blur-[20px] sm:p-8"
+            data-reveal
+          >
+            <div className="flex flex-col gap-4 border-b border-white/10 pb-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-3.5">
+                <span className="grid size-12 place-items-center rounded-2xl border border-[rgba(245,166,35,0.35)] bg-[rgba(245,166,35,0.14)] text-2xl shadow-[0_0_20px_rgba(245,166,35,0.22)]">
+                  {selectedCapability.icon}
+                </span>
                 <div>
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={[
-                        "inline-flex h-10 min-w-10 items-center justify-center rounded-full border px-3 text-[0.72rem] font-semibold uppercase tracking-[0.18em]",
-                        group.accent === "teal"
-                          ? "border-[rgba(0,212,170,0.22)] bg-[rgba(0,212,170,0.1)] text-[var(--teal)]"
-                          : "border-[rgba(245,166,35,0.22)] bg-[rgba(245,166,35,0.1)] text-[var(--amber)]",
-                      ].join(" ")}
-                    >
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span className="text-[0.75rem] uppercase tracking-[0.18em] text-[var(--muted-strong)]">
-                      {group.accent === "teal" ? "Core Capability" : "Delivery Layer"}
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <h3 className="font-[family-name:var(--font-display)] text-[1.4rem] font-bold text-white">
+                      {selectedCapability.title}
+                    </h3>
+                    <span className="rounded-full border border-[rgba(245,166,35,0.25)] bg-[rgba(245,166,35,0.1)] px-2.5 py-0.5 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-[var(--amber)]">
+                      Verified Stack
                     </span>
                   </div>
-
-                  <h3 className="mt-5 font-[family-name:var(--font-display)] text-[clamp(1.7rem,3vw,2.3rem)] leading-[1.08]">
-                    {group.title}
-                  </h3>
-                  <p className="mt-3 max-w-[34rem] text-[var(--muted)] leading-[1.8] text-pretty">
-                    {group.description}
+                  <p className="mt-1 text-[0.88rem] text-[var(--muted)] text-pretty">
+                    {selectedCapability.description}
                   </p>
                 </div>
-
-                <div
-                  className={[
-                    "grid gap-4",
-                    index === 0 ? "sm:grid-cols-2" : "",
-                  ].join(" ")}
-                >
-                  {group.skills.map((skill) => (
-                    <div
-                      key={skill.name}
-                      className="rounded-[22px] border border-white/8 bg-white/[0.035] p-4"
-                    >
-                      <div className="flex items-center justify-between gap-4">
-                        <span className="text-[0.98rem] text-[var(--text)]">{skill.name}</span>
-                        <span
-                          className={[
-                            "rounded-full px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em]",
-                            group.accent === "teal"
-                              ? "bg-[rgba(0,212,170,0.1)] text-[var(--teal)]"
-                              : "bg-[rgba(245,166,35,0.12)] text-[var(--amber)]",
-                          ].join(" ")}
-                        >
-                          {getSkillLevelLabel(skill.level)}
-                        </span>
-                      </div>
-
-                      <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-white/[0.07]">
-                        <div
-                          className={[
-                            "h-full rounded-full transition-[width] duration-[1150ms] [transition-timing-function:cubic-bezier(0.2,0.8,0.2,1)]",
-                            group.accent === "teal"
-                              ? "bg-[linear-gradient(90deg,rgba(0,212,170,0.54),var(--teal))]"
-                              : "bg-[linear-gradient(90deg,rgba(245,166,35,0.45),var(--amber))]",
-                          ].join(" ")}
-                          data-skill-bar
-                          data-width={skill.level}
-                          style={{ ["--target-width" as string]: "0%", width: "var(--target-width)" }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
               </div>
-            </article>
-          ))}
+              <div className="flex items-center gap-2 self-start sm:self-auto">
+                <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[0.76rem] font-mono text-[var(--muted-strong)]">
+                  {selectedCapability.skills.length} core tools
+                </span>
+              </div>
+            </div>
+
+            {/* Proficiency Bars */}
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {selectedCapability.skills.map((skill) => (
+                <div
+                  key={skill.name}
+                  className="rounded-[18px] border border-white/8 bg-white/[0.035] p-4 transition-all duration-200 hover:border-white/15 hover:bg-white/[0.05]"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-[0.95rem] font-medium text-[var(--text)]">
+                      {skill.name}
+                    </span>
+                    <span className="rounded-full bg-[rgba(245,166,35,0.12)] px-2.5 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--amber)]">
+                      {getSkillLevelLabel(skill.level)}
+                    </span>
+                  </div>
+                  <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-white/[0.07]">
+                    <div
+                      className="h-full rounded-full bg-[linear-gradient(90deg,rgba(245,166,35,0.45),var(--amber))] transition-all duration-700"
+                      style={{ width: `${skill.level}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom Call to Action - Pangea Performance Style */}
+          <div className="reveal mt-12 flex justify-center" data-reveal>
+            <a
+              href="#projects"
+              className="group inline-flex items-center gap-3 rounded-2xl bg-[linear-gradient(135deg,var(--amber),#ffc870)] px-9 py-4 font-mono text-[0.92rem] font-extrabold text-[#120b02] shadow-[0_0_30px_rgba(245,166,35,0.35)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_45px_rgba(245,166,35,0.55)] active:scale-95"
+            >
+              <span>Explore Projects &amp; Builds</span>
+              <span className="transition-transform duration-200 group-hover:translate-x-1">
+                →
+              </span>
+            </a>
+          </div>
         </div>
       </section>
 
@@ -1031,9 +1304,28 @@ export default function Home() {
             >
               <div className="absolute top-[1.7rem] -left-[1.95rem] h-4 w-4 rounded-full bg-[linear-gradient(135deg,var(--teal),var(--amber))] shadow-[0_0_0_5px_rgba(10,15,30,0.78)] max-sm:-left-[1.3rem]" />
               <div>
-                <span className="text-[0.86rem] uppercase tracking-[0.09em] text-[var(--amber)]">
-                  {item.dates}
-                </span>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <span className="text-[0.86rem] uppercase tracking-[0.09em] text-[var(--amber)]">
+                      {item.dates}
+                    </span>
+                    {item.isCurrent ? (
+                      <span className="inline-flex items-center rounded-full border border-[rgba(0,212,170,0.28)] bg-[rgba(0,212,170,0.12)] px-2.5 py-0.5 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[var(--teal)]">
+                        Current
+                      </span>
+                    ) : null}
+                  </div>
+                  {item.link ? (
+                    <a
+                      href={item.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[0.84rem] text-[var(--teal)] transition-all duration-220 hover:border-[rgba(0,212,170,0.32)] hover:bg-[rgba(0,212,170,0.1)] hover:text-white"
+                    >
+                      {item.linkText ?? "Website"} <IconArrow />
+                    </a>
+                  ) : null}
+                </div>
                 <h3 className="mt-[0.55rem] mb-[0.55rem] font-[family-name:var(--font-display)] text-[1.45rem] leading-[1.16]">
                   {item.role}
                 </h3>
@@ -1350,8 +1642,8 @@ export default function Home() {
         >
           <div className="max-w-[36rem]">
             <p className="text-[var(--muted)] leading-[1.8] text-pretty">
-              Open to internships, frontend engineering roles, and full-stack
-              opportunities where product quality and execution matter equally.
+              Open to freelance projects, engineering roles, and full-stack
+              opportunities where product quality, speed, and execution matter equally.
             </p>
             <a
               className="mt-4 inline-block break-words font-[family-name:var(--font-display)] text-[clamp(1.5rem,3vw,2.4rem)] leading-[1.16]"
